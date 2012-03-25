@@ -1,0 +1,2 @@
+serviceClass: org.elsys.salvation.client.GreetingService
+path: BB3AD83C052C0CA9E12567173832EB6C.gwt.rpc
