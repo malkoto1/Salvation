@@ -19,7 +19,7 @@ public class Salvation implements EntryPoint {
 		mainHorizontalPanel.add(existingData);
 		mainHorizontalPanel.add(lastUpdatedLabel);
 		
-		RootPanel.get("Salvation").add(mainHorizontalPanel);
+		RootPanel.get("mainDiv").add(mainHorizontalPanel);
 	}
 
 }
