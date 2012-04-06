@@ -1,6 +1,8 @@
 package org.elsys.salvation.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -20,6 +22,16 @@ public class Salvation implements EntryPoint {
 		mainHorizontalPanel.add(lastUpdatedLabel);
 		
 		RootPanel.get("mainDiv").add(mainHorizontalPanel);
+		
+		newData.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				addDiploma();
+			}				
+		});
+	}
+	private void addDiploma() {
+		
+		
 	}
 
 }
