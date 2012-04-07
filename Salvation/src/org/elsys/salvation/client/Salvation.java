@@ -1,16 +1,30 @@
 package org.elsys.salvation.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.DatePicker;
+
+
+import com.smartgwt.client.data.DataSource;  
+import com.smartgwt.client.data.Record;  
+import com.smartgwt.client.types.Alignment;  
+import com.smartgwt.client.types.ListGridEditEvent;  
+import com.smartgwt.client.types.RowEndEditAction;  
+import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.Canvas;  
+import com.smartgwt.client.widgets.IButton;  
+import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.calendar.Calendar;
+import com.smartgwt.client.widgets.events.ClickEvent;  
+import com.smartgwt.client.widgets.events.ClickHandler;  
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.grid.ListGrid;  
+import com.smartgwt.client.widgets.grid.ListGridRecord;  
+import com.smartgwt.client.widgets.layout.HLayout;  
+import com.smartgwt.client.widgets.layout.VLayout; 
 
 
 public class Salvation implements EntryPoint {
@@ -35,24 +49,46 @@ public class Salvation implements EntryPoint {
 				addDiploma();
 			}				
 		});
+		
+		existingData.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				mainHorizontalPanel.clear();
+				editDiploma();
+			}				
+		});
+		
 	}
+	
 	private void addDiploma() {
 		
-		final TextBox projectNameTextBox = new TextBox();
-		final TextBox diplomantsNameTextBox = new TextBox();
-		final TextBox diplomaManager = new TextBox();
-		final TextBox reviewer = new TextBox();
+		final TextItem projectNameTextBox = new TextItem();
+		projectNameTextBox.setTitle("Project name:");
+		final TextItem diplomantsNameTextBox = new TextItem();
+		diplomantsNameTextBox.setTitle("Diplomants name/s:");
+		final TextItem diplomaManagerTextBox = new TextItem();
+		diplomaManagerTextBox.setTitle("Diploma Manager:");
+		final TextItem reviewerTextBox = new TextItem();
+		reviewerTextBox.setTitle("Reviewer:");
 		
-		final Label projectNameLabel = new Label("Project Name: ");
-		final Label diplomantsNameLabel = new Label("Diplomants Name: ");
-		final Label specialtiesLabel = new Label("Specialties: ");
-		final Label diplomaManagerLabel = new Label("Diploma Manager: ");
-		final Label reviewerLabel = new Label("Reviewer: ");
+		DynamicForm projectNameForm = new DynamicForm();
+		projectNameForm.setFields(projectNameTextBox);
+		DynamicForm diplomantsNameForm = new DynamicForm();
+		diplomantsNameForm.setFields(diplomaManagerTextBox);
+		DynamicForm diplomaManagerForm = new DynamicForm();
+		diplomaManagerForm.setFields(diplomaManagerTextBox);
+		DynamicForm reviewerForm = new DynamicForm();
+		reviewerForm.setFields(reviewerTextBox);
 		
-		final DatePicker whenAvailableDiplomaManager = new DatePicker();
-		final DatePicker whenAvailableReviewer = new DatePicker();
+//		final Label projectNameLabel = new Label("Project Name: ");
+//		final Label diplomantsNameLabel = new Label("Diplomants Name: ");
+//		final Label specialtiesLabel = new Label("Specialties: ");
+//		final Label diplomaManagerLabel = new Label("Diploma Manager: ");
+//		final Label reviewerLabel = new Label("Reviewer: ");
 		
-		final ListBox specialties = new ListBox();
+		final Calendar whenAvailableDiplomaManager = new Calendar();
+		final Calendar whenAvailableReviewer = new Calendar();
+		
+		//final ListBox specialties = new ListBox();
 		
 		final Button submitButton = new Button("Submit");
 		
@@ -64,21 +100,17 @@ public class Salvation implements EntryPoint {
 		
 		
 		
-		firstHorizontalPanel.add(projectNameLabel);
-		firstHorizontalPanel.add(projectNameTextBox);
+		firstHorizontalPanel.add(projectNameForm);
 		
-		secondHorizontalPanel.add(diplomantsNameLabel);
-		secondHorizontalPanel.add(diplomantsNameTextBox);
+		secondHorizontalPanel.add(diplomantsNameForm);
 		
-		thirdHorizontalPanel.add(specialtiesLabel);
-		thirdHorizontalPanel.add(specialties);
+//		thirdHorizontalPanel.add(specialtiesLabel);
+//		thirdHorizontalPanel.add(specialties);
 		
-		forthHorizontalPanel.add(diplomaManagerLabel);
-		forthHorizontalPanel.add(diplomaManager);
+		forthHorizontalPanel.add(diplomaManagerForm);
 		forthHorizontalPanel.add(whenAvailableDiplomaManager);
-		
-		fifthHorizontalPanel.add(reviewerLabel);
-		fifthHorizontalPanel.add(reviewer);
+
+		fifthHorizontalPanel.add(reviewerForm);
 		fifthHorizontalPanel.add(whenAvailableReviewer);
 		
 		mainVerticalPanel.add(firstHorizontalPanel);
@@ -90,4 +122,7 @@ public class Salvation implements EntryPoint {
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
 	}
 
+	private void editDiploma() {
+		
+	}
 }
