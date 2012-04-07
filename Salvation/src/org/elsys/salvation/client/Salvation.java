@@ -58,6 +58,11 @@ public class Salvation implements EntryPoint {
 			}				
 		});
 		
+//		ListGrid listGrid = new ListGrid() {  
+//            public DataSource getRelatedDataSource(ListGridRecord record) {  
+//                return ItemSupplyXmlDS.getInstance();  
+//            }  
+		
 	}
 	
 	private void addDiploma() {
@@ -144,5 +149,47 @@ public class Salvation implements EntryPoint {
 
 	private void editDiploma() {
 		
-	}
+		
+		ListGrid listGrid = new ListGrid() {  
+//          public DataSource getRelatedDataSource(ListGridRecord record) {  
+//              return ItemSupplyXmlDS.getInstance();  
+//          }  
+
+          @Override  
+          protected Canvas getExpansionComponent(final ListGridRecord record) {  
+
+              final ListGrid grid = this;  
+
+              VLayout layout = new VLayout(5);  
+              layout.setPadding(5);  
+
+              final ListGrid countryGrid = new ListGrid();  
+              countryGrid.setWidth(500);  
+              countryGrid.setHeight(224);  
+              countryGrid.setCellHeight(22);  
+//              countryGrid.setDataSource(getRelatedDataSource(record));  
+//              countryGrid.fetchRelatedData(record, SupplyCategoryXmlDS.getInstance());  
+
+              countryGrid.setCanEdit(true);  
+              countryGrid.setModalEditing(true);  
+              countryGrid.setEditEvent(ListGridEditEvent.CLICK);  
+              countryGrid.setListEndEditAction(RowEndEditAction.NEXT);  
+              countryGrid.setAutoSaveEdits(false);  
+
+              layout.addMember(countryGrid);  
+                                                  
+              return layout;  
+          }
+		
+		};
+		listGrid.setWidth(600);  
+	    listGrid.setHeight(500);  
+	    listGrid.setDrawAheadRatio(4);  
+	    listGrid.setCanExpandRecords(true);  
+
+//	    listGrid.setAutoFetchData(true);  
+//	    listGrid.setDataSource(dataSource);  
+
+	    listGrid.draw();
+	}  
 }
