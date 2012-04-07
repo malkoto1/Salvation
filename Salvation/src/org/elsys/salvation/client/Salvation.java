@@ -85,8 +85,10 @@ public class Salvation implements EntryPoint {
 //		final Label diplomaManagerLabel = new Label("Diploma Manager: ");
 //		final Label reviewerLabel = new Label("Reviewer: ");
 		
-		final Calendar whenAvailableDiplomaManager = new Calendar();
-		final Calendar whenAvailableReviewer = new Calendar();
+		final Calendar diplomaManagerCalendar = new Calendar();
+		setToSimpleCalendar(diplomaManagerCalendar);
+		final Calendar reviewerCalendar = new Calendar();
+		setToSimpleCalendar(reviewerCalendar);
 		
 		//final ListBox specialties = new ListBox();
 		
@@ -108,10 +110,10 @@ public class Salvation implements EntryPoint {
 //		thirdHorizontalPanel.add(specialties);
 		
 		forthHorizontalPanel.add(diplomaManagerForm);
-		forthHorizontalPanel.add(whenAvailableDiplomaManager);
+		forthHorizontalPanel.add(diplomaManagerCalendar);
 
 		fifthHorizontalPanel.add(reviewerForm);
-		fifthHorizontalPanel.add(whenAvailableReviewer);
+		fifthHorizontalPanel.add(reviewerCalendar);
 		
 		mainVerticalPanel.add(firstHorizontalPanel);
 		mainVerticalPanel.add(secondHorizontalPanel);
@@ -120,6 +122,21 @@ public class Salvation implements EntryPoint {
 		mainVerticalPanel.add(fifthHorizontalPanel);
 		mainVerticalPanel.add(submitButton);
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
+	}
+
+	private void setToSimpleCalendar(Calendar calendar) {
+		calendar.setWidth(500);  
+        calendar.setHeight(220);  
+        calendar.setShowDayView(false);  
+        calendar.setShowWeekView(false);  
+        calendar.setShowOtherDays(false);  
+        calendar.setShowDayHeaders(false);  
+        calendar.setShowDatePickerButton(false);  
+        calendar.setShowAddEventButton(false);  
+        calendar.setDisableWeekends(false);          
+        calendar.setShowDateChooser(false);  
+        calendar.setCanCreateEvents(false); 
+		
 	}
 
 	private void editDiploma() {
