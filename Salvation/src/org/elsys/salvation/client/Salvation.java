@@ -29,14 +29,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 
 public class Salvation implements EntryPoint {
-
-	private Button newData = new Button("New");
-	private Button existingData = new Button("Existing");
-	private HorizontalPanel mainHorizontalPanel = new HorizontalPanel();
-	private Label lastUpdatedLabel = new Label();
-	private VerticalPanel mainVerticalPanel = new VerticalPanel();
 	
 	public void onModuleLoad() {
+		
+		final Button newData = new Button("New");
+		final Button existingData = new Button("Existing");
+		final HorizontalPanel mainHorizontalPanel = new HorizontalPanel();
+		final Label lastUpdatedLabel = new Label();
+		
 		mainHorizontalPanel.add(newData);
 		mainHorizontalPanel.add(existingData);
 		mainHorizontalPanel.add(lastUpdatedLabel);
@@ -46,14 +46,14 @@ public class Salvation implements EntryPoint {
 		
 		newData.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				mainHorizontalPanel.clear();
+				RootPanel.get("mainDiv").clear();
 				addDiploma();
 			}				
 		});
 		
 		existingData.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				mainHorizontalPanel.clear();
+				RootPanel.get("mainDiv").clear();
 				editDiploma();
 			}				
 		});
@@ -66,6 +66,11 @@ public class Salvation implements EntryPoint {
 	}
 	
 	private void addDiploma() {
+		
+		final HorizontalPanel firstHorizontalPanel = new HorizontalPanel();
+		final HorizontalPanel secondHorizontalPanel = new HorizontalPanel();
+		final HorizontalPanel thirdHorizontalPanel = new HorizontalPanel();
+		final VerticalPanel mainVerticalPanel = new VerticalPanel();
 		
 		final TextItem projectNameTextBox = new TextItem();
 		projectNameTextBox.setTitle("Project name:");
@@ -85,12 +90,6 @@ public class Salvation implements EntryPoint {
 		DynamicForm reviewerForm = new DynamicForm();
 		reviewerForm.setFields(reviewerTextBox);
 		
-//		final Label projectNameLabel = new Label("Project Name: ");
-//		final Label diplomantsNameLabel = new Label("Diplomants Name: ");
-//		final Label specialtiesLabel = new Label("Specialties: ");
-//		final Label diplomaManagerLabel = new Label("Diploma Manager: ");
-//		final Label reviewerLabel = new Label("Reviewer: ");
-		
 		final Calendar diplomaManagerCalendar = new Calendar();
 		setToSimpleCalendar(diplomaManagerCalendar);
 		final Calendar reviewerCalendar = new Calendar();
@@ -103,12 +102,14 @@ public class Salvation implements EntryPoint {
 		
 		final Button submitButton = new Button("Submit");
 		final Button oneMoreButton = new Button("One More");
-		
-		final HorizontalPanel firstHorizontalPanel = new HorizontalPanel();
-		final HorizontalPanel secondHorizontalPanel = new HorizontalPanel();
-		final HorizontalPanel thirdHorizontalPanel = new HorizontalPanel();
-		
-		
+		final Button back = new Button("Back");
+		back.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				RootPanel.get("mainDiv").clear();
+				onModuleLoad();
+			}				
+		});
+				
 		
 		mainVerticalPanel.add(projectNameForm);
 		
@@ -128,6 +129,7 @@ public class Salvation implements EntryPoint {
 		mainVerticalPanel.add(firstHorizontalPanel);
 		mainVerticalPanel.add(secondHorizontalPanel);
 		mainVerticalPanel.add(thirdHorizontalPanel);
+		mainVerticalPanel.add(back);
 		
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
 	}
@@ -149,6 +151,13 @@ public class Salvation implements EntryPoint {
 
 	private void editDiploma() {
 		
+		final Button back = new Button("Back");
+		back.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				RootPanel.get("mainDiv").clear();
+				onModuleLoad();
+			}				
+		});
 		
 		ListGrid listGrid = new ListGrid() {  
 //          public DataSource getRelatedDataSource(ListGridRecord record) {  
@@ -191,5 +200,8 @@ public class Salvation implements EntryPoint {
 //	    listGrid.setDataSource(dataSource);  
 
 	    listGrid.draw();
+	    
+	    RootPanel.get("mainDiv").add(listGrid);
+	    RootPanel.get("mainDiv").add(back);
 	}  
 }
