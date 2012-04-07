@@ -20,6 +20,7 @@ import com.smartgwt.client.widgets.calendar.Calendar;
 import com.smartgwt.client.widgets.events.ClickEvent;  
 import com.smartgwt.client.widgets.events.ClickHandler;  
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.grid.ListGrid;  
 import com.smartgwt.client.widgets.grid.ListGridRecord;  
@@ -90,43 +91,45 @@ public class Salvation implements EntryPoint {
 		final Calendar reviewerCalendar = new Calendar();
 		setToSimpleCalendar(reviewerCalendar);
 		
-		//final ListBox specialties = new ListBox();
+		ComboBoxItem specialtiesCombo = new ComboBoxItem();
+		specialtiesCombo.setTitle("Specialty");  
+		DynamicForm specialtiesForm = new DynamicForm();
+		specialtiesForm.setFields(specialtiesCombo);
 		
 		final Button submitButton = new Button("Submit");
+		final Button oneMoreButton = new Button("One More");
 		
 		final HorizontalPanel firstHorizontalPanel = new HorizontalPanel();
 		final HorizontalPanel secondHorizontalPanel = new HorizontalPanel();
 		final HorizontalPanel thirdHorizontalPanel = new HorizontalPanel();
-		final HorizontalPanel forthHorizontalPanel = new HorizontalPanel();
-		final HorizontalPanel fifthHorizontalPanel = new HorizontalPanel();
 		
 		
 		
-		firstHorizontalPanel.add(projectNameForm);
+		mainVerticalPanel.add(projectNameForm);
 		
-		secondHorizontalPanel.add(diplomantsNameForm);
+		mainVerticalPanel.add(diplomantsNameForm);
 		
-//		thirdHorizontalPanel.add(specialtiesLabel);
-//		thirdHorizontalPanel.add(specialties);
+		mainVerticalPanel.add(specialtiesForm);
 		
-		forthHorizontalPanel.add(diplomaManagerForm);
-		forthHorizontalPanel.add(diplomaManagerCalendar);
+		firstHorizontalPanel.add(diplomaManagerForm);
+		firstHorizontalPanel.add(diplomaManagerCalendar);
 
-		fifthHorizontalPanel.add(reviewerForm);
-		fifthHorizontalPanel.add(reviewerCalendar);
+		secondHorizontalPanel.add(reviewerForm);
+		secondHorizontalPanel.add(reviewerCalendar);
+		
+		thirdHorizontalPanel.add(submitButton);
+		thirdHorizontalPanel.add(oneMoreButton);
 		
 		mainVerticalPanel.add(firstHorizontalPanel);
 		mainVerticalPanel.add(secondHorizontalPanel);
 		mainVerticalPanel.add(thirdHorizontalPanel);
-		mainVerticalPanel.add(forthHorizontalPanel);
-		mainVerticalPanel.add(fifthHorizontalPanel);
-		mainVerticalPanel.add(submitButton);
+		
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
 	}
 
 	private void setToSimpleCalendar(Calendar calendar) {
-		calendar.setWidth(500);  
-        calendar.setHeight(220);  
+		calendar.setWidth(220);  
+        calendar.setHeight(130);  
         calendar.setShowDayView(false);  
         calendar.setShowWeekView(false);  
         calendar.setShowOtherDays(false);  
