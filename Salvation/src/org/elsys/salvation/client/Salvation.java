@@ -13,6 +13,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.DateRange;
 import com.smartgwt.client.data.Record;  
 import com.smartgwt.client.data.RelativeDate;
+import com.smartgwt.client.docs.Date;
 import com.smartgwt.client.types.Alignment;  
 import com.smartgwt.client.types.ListGridEditEvent;  
 import com.smartgwt.client.types.RowEndEditAction;  
@@ -34,6 +35,9 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 
 public class Salvation implements EntryPoint {
+	
+	private java.util.Date dateStart;
+	private java.util.Date dateEnd;
 	
 	public void onModuleLoad() {
 		
@@ -80,9 +84,12 @@ public class Salvation implements EntryPoint {
         dateRange.setRelativeStartDate(RelativeDate.YESTERDAY);  
         dateRange.setRelativeEndDate(RelativeDate.YESTERDAY);  
         dateRangeItem.setValue(dateRange);
+        
+        dateStart = dateRange.getStartDate();
+        dateEnd = dateRange.getEndDate();
 		
         Button nextButton = new Button("Next");
-        nextButton.setDisabled(true);
+       // nextButton.setDisabled(true);
 
         nextButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
@@ -121,13 +128,13 @@ public class Salvation implements EntryPoint {
 		HorizontalPanel thirdHorizontalPanel = new HorizontalPanel();
 		VerticalPanel mainVerticalPanel = new VerticalPanel();
 		
-		final TextItem projectNameTextBox = new TextItem();
+		TextItem projectNameTextBox = new TextItem();
 		projectNameTextBox.setTitle("Project name:");
-		final TextItem diplomantsNameTextBox = new TextItem();
+		TextItem diplomantsNameTextBox = new TextItem();
 		diplomantsNameTextBox.setTitle("Diplomants name/s:");
-		final TextItem diplomaManagerTextBox = new TextItem();
+		TextItem diplomaManagerTextBox = new TextItem();
 		diplomaManagerTextBox.setTitle("Diploma Manager:");
-		final TextItem reviewerTextBox = new TextItem();
+		TextItem reviewerTextBox = new TextItem();
 		reviewerTextBox.setTitle("Reviewer:");
 		
 		DynamicForm projectNameForm = new DynamicForm();
@@ -139,9 +146,9 @@ public class Salvation implements EntryPoint {
 		DynamicForm reviewerForm = new DynamicForm();
 		reviewerForm.setFields(reviewerTextBox);
 		
-		final Calendar diplomaManagerCalendar = new Calendar();
+		Calendar diplomaManagerCalendar = new Calendar();
 		setToSimpleCalendar(diplomaManagerCalendar);
-		final Calendar reviewerCalendar = new Calendar();
+		Calendar reviewerCalendar = new Calendar();
 		setToSimpleCalendar(reviewerCalendar);
 		
 		ComboBoxItem specialtiesCombo = new ComboBoxItem();
@@ -194,7 +201,9 @@ public class Salvation implements EntryPoint {
         calendar.setShowAddEventButton(false);  
         calendar.setDisableWeekends(false);          
         calendar.setShowDateChooser(false);  
-        calendar.setCanCreateEvents(false); 
+        calendar.setCanCreateEvents(false);
+        
+        calendar.setTimelineRange(dateStart, dateEnd);
 		
 	}
 
@@ -225,8 +234,8 @@ public class Salvation implements EntryPoint {
               countryGrid.setWidth(500);  
               countryGrid.setHeight(224);  
               countryGrid.setCellHeight(22);  
-//              countryGrid.setDataSource(getRelatedDataSource(record));  
-//              countryGrid.fetchRelatedData(record, SupplyCategoryXmlDS.getInstance());  
+//            countryGrid.setDataSource(getRelatedDataSource(record));  
+//            countryGrid.fetchRelatedData(record, SupplyCategoryXmlDS.getInstance());  
 
               countryGrid.setCanEdit(true);  
               countryGrid.setModalEditing(true);  
