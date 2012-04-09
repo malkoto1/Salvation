@@ -1,14 +1,18 @@
 package org.elsys.salvation.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.layout.client.Layout;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 import com.smartgwt.client.data.DataSource;  
+import com.smartgwt.client.data.DateRange;
 import com.smartgwt.client.data.Record;  
+import com.smartgwt.client.data.RelativeDate;
 import com.smartgwt.client.types.Alignment;  
 import com.smartgwt.client.types.ListGridEditEvent;  
 import com.smartgwt.client.types.RowEndEditAction;  
@@ -21,6 +25,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;  
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.DateRangeItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.grid.ListGrid;  
 import com.smartgwt.client.widgets.grid.ListGridRecord;  
@@ -47,7 +52,7 @@ public class Salvation implements EntryPoint {
 		newData.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
-				addDiploma();
+				dateRange();
 			}				
 		});
 		
@@ -65,12 +70,56 @@ public class Salvation implements EntryPoint {
 		
 	}
 	
+	protected void dateRange() {
+		
+		VLayout layout = new VLayout(3);
+		
+		DateRangeItem dateRangeItem = new DateRangeItem("dri", "Date Range");  
+        dateRangeItem.setAllowRelativeDates(true);  
+        DateRange dateRange = new DateRange();  
+        dateRange.setRelativeStartDate(RelativeDate.YESTERDAY);  
+        dateRange.setRelativeEndDate(RelativeDate.YESTERDAY);  
+        dateRangeItem.setValue(dateRange);
+		
+        Button nextButton = new Button("Next");
+        nextButton.setDisabled(true);
+
+        nextButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	RootPanel.get("mainDiv").clear();
+	 			addDiploma();
+            }
+        }); 
+        
+        
+        
+//        if(!dateRange.getStartDate().equals(dateRange.getEndDate())){
+//        		nextButton.setDisabled(!nextButton.getDisabled());
+//        }
+        
+//        nextButton.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				RootPanel.get("mainDiv").clear();
+//				addDiploma();
+//			}				
+//		});
+        DynamicForm form = new DynamicForm();
+        form.setItems(dateRangeItem);
+        layout.addMember(form);
+        layout.addMember(nextButton);
+        
+        layout.draw();
+        RootPanel.get("mainDiv").add(layout);
+      
+        
+	}
+
 	private void addDiploma() {
 		
-		final HorizontalPanel firstHorizontalPanel = new HorizontalPanel();
-		final HorizontalPanel secondHorizontalPanel = new HorizontalPanel();
-		final HorizontalPanel thirdHorizontalPanel = new HorizontalPanel();
-		final VerticalPanel mainVerticalPanel = new VerticalPanel();
+		HorizontalPanel firstHorizontalPanel = new HorizontalPanel();
+		HorizontalPanel secondHorizontalPanel = new HorizontalPanel();
+		HorizontalPanel thirdHorizontalPanel = new HorizontalPanel();
+		VerticalPanel mainVerticalPanel = new VerticalPanel();
 		
 		final TextItem projectNameTextBox = new TextItem();
 		projectNameTextBox.setTitle("Project name:");
