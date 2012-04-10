@@ -17,11 +17,15 @@ import com.smartgwt.client.docs.Date;
 import com.smartgwt.client.types.Alignment;  
 import com.smartgwt.client.types.ListGridEditEvent;  
 import com.smartgwt.client.types.RowEndEditAction;  
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Canvas;  
 import com.smartgwt.client.widgets.IButton;  
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.calendar.Calendar;
+import com.smartgwt.client.widgets.calendar.CalendarEvent;
+import com.smartgwt.client.widgets.calendar.events.DayBodyClickEvent;
+import com.smartgwt.client.widgets.calendar.events.DayBodyClickHandler;
 import com.smartgwt.client.widgets.events.ClickEvent;  
 import com.smartgwt.client.widgets.events.ClickHandler;  
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -36,8 +40,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class Salvation implements EntryPoint {
 	
-	private java.util.Date dateStart;
-	private java.util.Date dateEnd;
+	private java.util.Date startDate;
+	private java.util.Date endDate;
 	
 	public void onModuleLoad() {
 		
@@ -85,8 +89,8 @@ public class Salvation implements EntryPoint {
         dateRange.setRelativeEndDate(RelativeDate.YESTERDAY);  
         dateRangeItem.setValue(dateRange);
         
-        dateStart = dateRange.getStartDate();
-        dateEnd = dateRange.getEndDate();
+        startDate = dateRange.getStartDate();
+        endDate = dateRange.getEndDate();
 		
         Button nextButton = new Button("Next");
        // nextButton.setDisabled(true);
@@ -146,9 +150,10 @@ public class Salvation implements EntryPoint {
 		DynamicForm reviewerForm = new DynamicForm();
 		reviewerForm.setFields(reviewerTextBox);
 		
-		Calendar diplomaManagerCalendar = new Calendar();
-		setToSimpleCalendar(diplomaManagerCalendar);
-		Calendar reviewerCalendar = new Calendar();
+		final Calendar diplomaManagerCalendar = new Calendar();
+		setToSimpleCalendar(diplomaManagerCalendar); 
+		
+		final Calendar reviewerCalendar = new Calendar();
 		setToSimpleCalendar(reviewerCalendar);
 		
 		ComboBoxItem specialtiesCombo = new ComboBoxItem();
@@ -190,9 +195,9 @@ public class Salvation implements EntryPoint {
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
 	}
 
-	private void setToSimpleCalendar(Calendar calendar) {
-		calendar.setWidth(220);  
-        calendar.setHeight(130);  
+	private void setToSimpleCalendar(final Calendar calendar) {
+		calendar.setWidth(400);  
+        calendar.setHeight(190);  
         calendar.setShowDayView(false);  
         calendar.setShowWeekView(false);  
         calendar.setShowOtherDays(false);  
@@ -202,9 +207,15 @@ public class Salvation implements EntryPoint {
         calendar.setDisableWeekends(false);          
         calendar.setShowDateChooser(false);  
         calendar.setCanCreateEvents(false);
-        
-        calendar.setTimelineRange(dateStart, dateEnd);
-		
+        //calendar.setShowDayHeaders(true);
+        calendar.addDayBodyClickHandler(new DayBodyClickHandler() {  
+            public void onDayBodyClick(DayBodyClickEvent event) {
+            	if(event.getDate().after(startDate) || event.getDate().before(endDate) 
+            			|| event.getDate().equals(startDate) || event.getDate().equals(endDate)){
+                calendar.addEvent(event.getDate(),event.getDate(), "UnavailableDate", "UnavailableDate");
+            	}
+            }  
+        }); 
 	}
 
 	private void editDiploma() {
