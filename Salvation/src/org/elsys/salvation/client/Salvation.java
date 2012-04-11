@@ -1,5 +1,8 @@
 package org.elsys.salvation.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.layout.client.Layout;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -42,6 +45,8 @@ public class Salvation implements EntryPoint {
 	
 	private java.util.Date startDate;
 	private java.util.Date endDate;
+	private ArrayList<java.util.Date> reviewerUnavailableDates;
+	private ArrayList<java.util.Date> diplomaManagerUnavailableDates;
 	
 	public void onModuleLoad() {
 		
@@ -151,19 +156,31 @@ public class Salvation implements EntryPoint {
 		reviewerForm.setFields(reviewerTextBox);
 		
 		final Calendar diplomaManagerCalendar = new Calendar();
-		setToSimpleCalendar(diplomaManagerCalendar); 
+
+		setToSimpleCalendar(diplomaManagerCalendar, diplomaManagerUnavailableDates); 
 		
 		final Calendar reviewerCalendar = new Calendar();
-		setToSimpleCalendar(reviewerCalendar);
+		setToSimpleCalendar(reviewerCalendar, reviewerUnavailableDates);
 		
 		ComboBoxItem specialtiesCombo = new ComboBoxItem();
 		specialtiesCombo.setTitle("Specialty");  
 		DynamicForm specialtiesForm = new DynamicForm();
 		specialtiesForm.setFields(specialtiesCombo);
 		
-		final Button submitButton = new Button("Submit");
-		final Button oneMoreButton = new Button("One More");
-		final Button back = new Button("Back");
+		Button submitButton = new Button("Submit");
+		Button oneMoreButton = new Button("One More");
+		oneMoreButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Reviewer reviewer = new Reviewer();
+				reviewer.setUnavailableDates(reviewerCalendar.getData());
+				
+//				String string = new String();
+//				Integer intObj = new Integer(reviewer.getUnavailableDates().size());
+//				string = intObj.toString();
+//				SC.say(string);
+			}				
+		});
+		Button back = new Button("Back");
 		back.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
@@ -195,24 +212,23 @@ public class Salvation implements EntryPoint {
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
 	}
 
-	private void setToSimpleCalendar(final Calendar calendar) {
-		calendar.setWidth(400);  
-        calendar.setHeight(190);  
+	private void setToSimpleCalendar(final Calendar calendar, final ArrayList<java.util.Date> events) {
+		calendar.setWidth(500);  
+        calendar.setHeight(220);  
         calendar.setShowDayView(false);  
         calendar.setShowWeekView(false);  
-        calendar.setShowOtherDays(false);  
-        calendar.setShowDayHeaders(false);  
+        calendar.setShowOtherDays(false);
         calendar.setShowDatePickerButton(false);  
         calendar.setShowAddEventButton(false);  
         calendar.setDisableWeekends(false);          
         calendar.setShowDateChooser(false);  
         calendar.setCanCreateEvents(false);
-        //calendar.setShowDayHeaders(true);
+       // calendar.setShowDayHeaders(true);
         calendar.addDayBodyClickHandler(new DayBodyClickHandler() {  
             public void onDayBodyClick(DayBodyClickEvent event) {
-            	if(event.getDate().after(startDate) || event.getDate().before(endDate) 
-            			|| event.getDate().equals(startDate) || event.getDate().equals(endDate)){
+            	if(event.getDate().after(startDate) || event.getDate().before(endDate)){
                 calendar.addEvent(event.getDate(),event.getDate(), "UnavailableDate", "UnavailableDate");
+                //events.add(event.getDate()); 
             	}
             }  
         }); 
