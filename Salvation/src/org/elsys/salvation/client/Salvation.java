@@ -1,52 +1,42 @@
 package org.elsys.salvation.client;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+import java.util.HashSet;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.layout.client.Layout;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
-
-import com.smartgwt.client.data.DataSource;  
+import com.google.gwt.user.datepicker.client.DatePicker;
 import com.smartgwt.client.data.DateRange;
-import com.smartgwt.client.data.Record;  
 import com.smartgwt.client.data.RelativeDate;
-import com.smartgwt.client.docs.Date;
-import com.smartgwt.client.types.Alignment;  
-import com.smartgwt.client.types.ListGridEditEvent;  
-import com.smartgwt.client.types.RowEndEditAction;  
+import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
-import com.smartgwt.client.widgets.Canvas;  
-import com.smartgwt.client.widgets.IButton;  
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.calendar.Calendar;
-import com.smartgwt.client.widgets.calendar.CalendarEvent;
 import com.smartgwt.client.widgets.calendar.events.DayBodyClickEvent;
 import com.smartgwt.client.widgets.calendar.events.DayBodyClickHandler;
-import com.smartgwt.client.widgets.events.ClickEvent;  
-import com.smartgwt.client.widgets.events.ClickHandler;  
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateRangeItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.grid.ListGrid;  
-import com.smartgwt.client.widgets.grid.ListGridRecord;  
-import com.smartgwt.client.widgets.layout.HLayout;  
-import com.smartgwt.client.widgets.layout.VLayout; 
+import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 
 public class Salvation implements EntryPoint {
 	
 	private java.util.Date startDate;
 	private java.util.Date endDate;
-	private ArrayList<java.util.Date> reviewerUnavailableDates;
-	private ArrayList<java.util.Date> diplomaManagerUnavailableDates;
 	
 	public void onModuleLoad() {
 		
@@ -103,7 +93,7 @@ public class Salvation implements EntryPoint {
         nextButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
             	RootPanel.get("mainDiv").clear();
-	 			addDiploma();
+            	addPerson();
             }
         }); 
         
@@ -130,10 +120,82 @@ public class Salvation implements EntryPoint {
         
 	}
 
+	private void addPerson(){
+		final HashSet<Date> dates = new HashSet();
+		
+		DatePicker diplomaManagerDatePicker = new DatePicker();
+		DatePicker reviewerDatePicker = new DatePicker();
+		reviewerDatePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
+		      public void onValueChange(ValueChangeEvent<Date> event) {
+		    	  dates.add(event.getValue());
+		      }
+		    });
+		
+		Button oneMoreButton = new Button("One More");
+		oneMoreButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				
+//				SC.say(new Integer(dates.size()).toString());
+				RootPanel.get("mainDiv").clear();
+            	addPerson();
+			}				
+		});
+		
+		Button back = new Button("Back");
+		back.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				RootPanel.get("mainDiv").clear();
+				onModuleLoad();
+			}				
+		});
+		
+		Button next = new Button("Next");
+		next.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				RootPanel.get("mainDiv").clear();
+            	addDiploma();
+				
+			}				
+		});
+		
+		TextItem diplomaManagerTextBox = new TextItem();
+		diplomaManagerTextBox.setTitle("Diploma Manager");
+		
+		DynamicForm diplomaManagerForm = new DynamicForm();
+		diplomaManagerForm.setFields(diplomaManagerTextBox);
+		
+		
+		HorizontalPanel diplomaHorizontalPanel = new HorizontalPanel();
+		
+		diplomaHorizontalPanel.add(diplomaManagerForm);
+		diplomaHorizontalPanel.add(diplomaManagerDatePicker);
+		
+		TextItem reviewerTextBox = new TextItem();
+		reviewerTextBox.setTitle("Reviewer");
+		
+		DynamicForm reviewerForm = new DynamicForm();
+		reviewerForm.setFields(reviewerTextBox);
+		
+		
+		HorizontalPanel reviewerHorizontalPanel = new HorizontalPanel();
+		
+		reviewerHorizontalPanel.add(reviewerForm);
+		reviewerHorizontalPanel.add(reviewerDatePicker);
+
+		
+		HorizontalPanel buttonsPanel = new HorizontalPanel();
+		buttonsPanel.add(oneMoreButton);
+		buttonsPanel.add(back);
+		buttonsPanel.add(next);
+		
+		RootPanel.get("mainDiv").add(diplomaHorizontalPanel);
+		RootPanel.get("mainDiv").add(reviewerHorizontalPanel);
+		RootPanel.get("mainDiv").add(buttonsPanel);
+		
+	}
+	
 	private void addDiploma() {
 		
-		HorizontalPanel firstHorizontalPanel = new HorizontalPanel();
-		HorizontalPanel secondHorizontalPanel = new HorizontalPanel();
 		HorizontalPanel thirdHorizontalPanel = new HorizontalPanel();
 		VerticalPanel mainVerticalPanel = new VerticalPanel();
 		
@@ -141,26 +203,15 @@ public class Salvation implements EntryPoint {
 		projectNameTextBox.setTitle("Project name:");
 		TextItem diplomantsNameTextBox = new TextItem();
 		diplomantsNameTextBox.setTitle("Diplomants name/s:");
-		TextItem diplomaManagerTextBox = new TextItem();
-		diplomaManagerTextBox.setTitle("Diploma Manager:");
-		TextItem reviewerTextBox = new TextItem();
-		reviewerTextBox.setTitle("Reviewer:");
+		
 		
 		DynamicForm projectNameForm = new DynamicForm();
 		projectNameForm.setFields(projectNameTextBox);
 		DynamicForm diplomantsNameForm = new DynamicForm();
-		diplomantsNameForm.setFields(diplomaManagerTextBox);
-		DynamicForm diplomaManagerForm = new DynamicForm();
-		diplomaManagerForm.setFields(diplomaManagerTextBox);
-		DynamicForm reviewerForm = new DynamicForm();
-		reviewerForm.setFields(reviewerTextBox);
+		diplomantsNameForm.setFields(diplomantsNameTextBox);
 		
-		final Calendar diplomaManagerCalendar = new Calendar();
-
-		setToSimpleCalendar(diplomaManagerCalendar, diplomaManagerUnavailableDates); 
 		
-		final Calendar reviewerCalendar = new Calendar();
-		setToSimpleCalendar(reviewerCalendar, reviewerUnavailableDates);
+		
 		
 		ComboBoxItem specialtiesCombo = new ComboBoxItem();
 		specialtiesCombo.setTitle("Specialty");  
@@ -169,17 +220,6 @@ public class Salvation implements EntryPoint {
 		
 		Button submitButton = new Button("Submit");
 		Button oneMoreButton = new Button("One More");
-		oneMoreButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				Reviewer reviewer = new Reviewer();
-				reviewer.setUnavailableDates(reviewerCalendar.getData());
-				
-//				String string = new String();
-//				Integer intObj = new Integer(reviewer.getUnavailableDates().size());
-//				string = intObj.toString();
-//				SC.say(string);
-			}				
-		});
 		Button back = new Button("Back");
 		back.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -194,44 +234,15 @@ public class Salvation implements EntryPoint {
 		mainVerticalPanel.add(diplomantsNameForm);
 		
 		mainVerticalPanel.add(specialtiesForm);
-		
-		firstHorizontalPanel.add(diplomaManagerForm);
-		firstHorizontalPanel.add(diplomaManagerCalendar);
 
-		secondHorizontalPanel.add(reviewerForm);
-		secondHorizontalPanel.add(reviewerCalendar);
 		
 		thirdHorizontalPanel.add(submitButton);
 		thirdHorizontalPanel.add(oneMoreButton);
 		
-		mainVerticalPanel.add(firstHorizontalPanel);
-		mainVerticalPanel.add(secondHorizontalPanel);
 		mainVerticalPanel.add(thirdHorizontalPanel);
 		mainVerticalPanel.add(back);
 		
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
-	}
-
-	private void setToSimpleCalendar(final Calendar calendar, final ArrayList<java.util.Date> events) {
-		calendar.setWidth(500);  
-        calendar.setHeight(220);  
-        calendar.setShowDayView(false);  
-        calendar.setShowWeekView(false);  
-        calendar.setShowOtherDays(false);
-        calendar.setShowDatePickerButton(false);  
-        calendar.setShowAddEventButton(false);  
-        calendar.setDisableWeekends(false);          
-        calendar.setShowDateChooser(false);  
-        calendar.setCanCreateEvents(false);
-       // calendar.setShowDayHeaders(true);
-        calendar.addDayBodyClickHandler(new DayBodyClickHandler() {  
-            public void onDayBodyClick(DayBodyClickEvent event) {
-            	if(event.getDate().after(startDate) || event.getDate().before(endDate)){
-                calendar.addEvent(event.getDate(),event.getDate(), "UnavailableDate", "UnavailableDate");
-                //events.add(event.getDate()); 
-            	}
-            }  
-        }); 
 	}
 
 	private void editDiploma() {
