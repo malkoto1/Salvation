@@ -1,6 +1,5 @@
 package org.elsys.salvation.client;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -8,6 +7,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
@@ -15,13 +15,9 @@ import com.smartgwt.client.data.DateRange;
 import com.smartgwt.client.data.RelativeDate;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.calendar.Calendar;
-import com.smartgwt.client.widgets.calendar.events.DayBodyClickEvent;
-import com.smartgwt.client.widgets.calendar.events.DayBodyClickHandler;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -88,7 +84,6 @@ public class Salvation implements EntryPoint {
         endDate = dateRange.getEndDate();
 		
         Button nextButton = new Button("Next");
-       // nextButton.setDisabled(true);
 
         nextButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
@@ -102,13 +97,6 @@ public class Salvation implements EntryPoint {
 //        if(!dateRange.getStartDate().equals(dateRange.getEndDate())){
 //        		nextButton.setDisabled(!nextButton.getDisabled());
 //        }
-        
-//        nextButton.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				RootPanel.get("mainDiv").clear();
-//				addDiploma();
-//			}				
-//		});
         DynamicForm form = new DynamicForm();
         form.setItems(dateRangeItem);
         layout.addMember(form);
@@ -123,9 +111,21 @@ public class Salvation implements EntryPoint {
 	private void addPerson(){
 		final HashSet<Date> dates = new HashSet();
 		
-		DatePicker diplomaManagerDatePicker = new DatePicker();
-		DatePicker reviewerDatePicker = new DatePicker();
-		reviewerDatePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
+		HorizontalPanel horizontalPanel = new HorizontalPanel();
+		HorizontalPanel buttonsPanel = new HorizontalPanel();
+		
+		TextItem textBox = new TextItem();
+		textBox.setTitle("Name");
+		
+		DynamicForm form = new DynamicForm();
+		
+		 ListBox listBox = new ListBox();
+		 listBox.addItem("DiplomaManager");
+		 listBox.addItem("Reviewer");
+		 listBox.setVisibleItemCount(2);
+
+		DatePicker datePicker = new DatePicker();
+		datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
 		      public void onValueChange(ValueChangeEvent<Date> event) {
 		    	  dates.add(event.getValue());
 		      }
@@ -158,38 +158,17 @@ public class Salvation implements EntryPoint {
 			}				
 		});
 		
-		TextItem diplomaManagerTextBox = new TextItem();
-		diplomaManagerTextBox.setTitle("Diploma Manager");
 		
-		DynamicForm diplomaManagerForm = new DynamicForm();
-		diplomaManagerForm.setFields(diplomaManagerTextBox);
-		
-		
-		HorizontalPanel diplomaHorizontalPanel = new HorizontalPanel();
-		
-		diplomaHorizontalPanel.add(diplomaManagerForm);
-		diplomaHorizontalPanel.add(diplomaManagerDatePicker);
-		
-		TextItem reviewerTextBox = new TextItem();
-		reviewerTextBox.setTitle("Reviewer");
-		
-		DynamicForm reviewerForm = new DynamicForm();
-		reviewerForm.setFields(reviewerTextBox);
-		
-		
-		HorizontalPanel reviewerHorizontalPanel = new HorizontalPanel();
-		
-		reviewerHorizontalPanel.add(reviewerForm);
-		reviewerHorizontalPanel.add(reviewerDatePicker);
+		//horizontalPanel.add(form);
+		//horizontalPanel.add(datePicker);
+		form.setFields(textBox);
+		form.addChild(datePicker);
 
-		
-		HorizontalPanel buttonsPanel = new HorizontalPanel();
 		buttonsPanel.add(oneMoreButton);
 		buttonsPanel.add(back);
 		buttonsPanel.add(next);
-		
-		RootPanel.get("mainDiv").add(diplomaHorizontalPanel);
-		RootPanel.get("mainDiv").add(reviewerHorizontalPanel);
+
+		RootPanel.get("mainDiv").add(form);
 		RootPanel.get("mainDiv").add(buttonsPanel);
 		
 	}
