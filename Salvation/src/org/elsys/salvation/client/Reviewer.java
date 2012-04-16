@@ -1,22 +1,18 @@
 package org.elsys.salvation.client;
 
-import java.util.ArrayList;
 import java.util.Date;
-
-import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.calendar.CalendarEvent;
+import java.util.HashSet;
 
 public class Reviewer {
 	private String name;
-	private ArrayList<Date> unavailableDates;
-	//when...
+	private HashSet<Date> unavailableDates;
 	
-	public Reviewer() {
+	public Reviewer(String name, HashSet<Date> unavailableDates) {
 		super();
-		this.name = null;
-		this.unavailableDates = null;
+		this.name = name;
+		this.unavailableDates.addAll(unavailableDates);
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -24,22 +20,13 @@ public class Reviewer {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public ArrayList<Date> getUnavailableDates() {
+	
+	public HashSet<Date> getUnavailableDates() {
 		return unavailableDates;
 	}
-//	public void setUnavailableDates(ArrayList<Date> unavailableDates) {
-//		this.unavailableDates = unavailableDates;
-//	}
-	public void addDate(Date date){
-			unavailableDates.add(date);
-		
+	
+	public void setUnavailableDates(HashSet<Date> unavailableDates) {
+		this.unavailableDates.addAll(unavailableDates) ;
 	}
 
-	public void setUnavailableDates(CalendarEvent[] data) {
-		for(int i=0; i<data.length; i++) {
-			unavailableDates.add(data[i].getStartDate());
-			SC.say("asd");
-		}
-		
-	}
 }

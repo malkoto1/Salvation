@@ -15,6 +15,7 @@ import com.smartgwt.client.data.DateRange;
 import com.smartgwt.client.data.RelativeDate;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
@@ -33,6 +34,10 @@ public class Salvation implements EntryPoint {
 	
 	private java.util.Date startDate;
 	private java.util.Date endDate;
+	private HashSet<Reviewer> Reviewers;
+	private HashSet<DiplomaLeader> DiplomaLeaders;
+	private HashSet<DiplomaWork> DiplomaWorks;
+	
 	
 	public void onModuleLoad() {
 		
@@ -114,20 +119,21 @@ public class Salvation implements EntryPoint {
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		HorizontalPanel buttonsPanel = new HorizontalPanel();
 		
-		TextItem textBox = new TextItem();
+		final TextItem textBox = new TextItem();
 		textBox.setTitle("Name");
 		
 		DynamicForm form = new DynamicForm();
 		
-		 ListBox listBox = new ListBox();
+		 final ListBox listBox = new ListBox();
 		 listBox.addItem("DiplomaManager");
 		 listBox.addItem("Reviewer");
-		 listBox.setVisibleItemCount(2);
+		 //listBox.setVisibleItemCount(2);
 
 		DatePicker datePicker = new DatePicker();
 		datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
 		      public void onValueChange(ValueChangeEvent<Date> event) {
 		    	  dates.add(event.getValue());
+		    	  SC.say(event.getValue().toString() + " Added to unavailable dates ");
 		      }
 		    });
 		
@@ -135,10 +141,12 @@ public class Salvation implements EntryPoint {
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				
-//				SC.say(new Integer(dates.size()).toString());
+				//SC.say(listBox.getValue(0));
+				getPerson(dates,textBox,listBox);
 				RootPanel.get("mainDiv").clear();
             	addPerson();
-			}				
+			}
+		
 		});
 		
 		Button back = new Button("Back");
@@ -155,23 +163,39 @@ public class Salvation implements EntryPoint {
 				RootPanel.get("mainDiv").clear();
             	addDiploma();
 				
-			}				
+			}			
 		});
 		
-		
-		//horizontalPanel.add(form);
-		//horizontalPanel.add(datePicker);
 		form.setFields(textBox);
-		form.addChild(datePicker);
+		
+		horizontalPanel.add(form);
+		horizontalPanel.add(datePicker);
+		horizontalPanel.add(listBox);
+		
 
 		buttonsPanel.add(oneMoreButton);
 		buttonsPanel.add(back);
 		buttonsPanel.add(next);
 
-		RootPanel.get("mainDiv").add(form);
+		RootPanel.get("mainDiv").add(horizontalPanel);
 		RootPanel.get("mainDiv").add(buttonsPanel);
+	}
+	
+	private void getPerson(HashSet<Date> set, TextItem box, ListBox list){
+		if(list.getSelectedIndex()==0){
+			DiplomaLeader leader = new DiplomaLeader(box.getValueAsString(), set);
+			DiplomaLeaders.add(leader);
+		}else if(list.getSelectedIndex()==1){
+			Reviewer reviewer = new Reviewer(box.getValueAsString(), set);
+			Reviewers.add(reviewer);
+		}else {
+			SC.say("Error accured :) Maybe nothing was entered");
+		}
 		
 	}
+	
+	
+	
 	
 	private void addDiploma() {
 		
@@ -179,9 +203,9 @@ public class Salvation implements EntryPoint {
 		VerticalPanel mainVerticalPanel = new VerticalPanel();
 		
 		TextItem projectNameTextBox = new TextItem();
-		projectNameTextBox.setTitle("Project name:");
+		projectNameTextBox.setTitle("Project name");
 		TextItem diplomantsNameTextBox = new TextItem();
-		diplomantsNameTextBox.setTitle("Diplomants name/s:");
+		diplomantsNameTextBox.setTitle("Diplomants name/s");
 		
 		
 		DynamicForm projectNameForm = new DynamicForm();
@@ -192,10 +216,18 @@ public class Salvation implements EntryPoint {
 		
 		
 		
-		ComboBoxItem specialtiesCombo = new ComboBoxItem();
-		specialtiesCombo.setTitle("Specialty");  
-		DynamicForm specialtiesForm = new DynamicForm();
-		specialtiesForm.setFields(specialtiesCombo);
+//		ComboBoxItem specialtiesCombo = new ComboBoxItem();
+//		specialtiesCombo.setTitle("Specialty");
+		
+		ListBox specialtiesListBox = new ListBox();
+		specialtiesListBox.setTitle("Specialty");
+		specialtiesListBox.addItem("Software");
+		specialtiesListBox.addItem("Hardware");
+		specialtiesListBox.addItem("Communication");
+		
+		
+//		DynamicForm specialtiesForm = new DynamicForm();
+//		specialtiesForm.setFields(specialtiesCombo);
 		
 		Button submitButton = new Button("Submit");
 		Button oneMoreButton = new Button("One More");
@@ -212,7 +244,7 @@ public class Salvation implements EntryPoint {
 		
 		mainVerticalPanel.add(diplomantsNameForm);
 		
-		mainVerticalPanel.add(specialtiesForm);
+		mainVerticalPanel.add(specialtiesListBox);
 
 		
 		thirdHorizontalPanel.add(submitButton);
@@ -223,7 +255,7 @@ public class Salvation implements EntryPoint {
 		
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
 	}
-
+	
 	private void editDiploma() {
 		
 		final Button back = new Button("Back");
