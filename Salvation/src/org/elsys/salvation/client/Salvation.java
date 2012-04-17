@@ -2,6 +2,8 @@ package org.elsys.salvation.client;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -22,7 +24,6 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateRangeItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -32,8 +33,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class Salvation implements EntryPoint {
 	
-	private java.util.Date startDate;
-	private java.util.Date endDate;
+	private Date startDate = new Date();
+	private Date endDate = new Date();
 	private HashSet<Reviewer> Reviewers = new HashSet<Reviewer>();
 	private HashSet<DiplomaLeader> DiplomaLeaders = new HashSet<DiplomaLeader>();
 	private HashSet<DiplomaWork> DiplomaWorks = new HashSet<DiplomaWork>();
@@ -65,12 +66,7 @@ public class Salvation implements EntryPoint {
 				RootPanel.get("mainDiv").clear();
 				editDiploma();
 			}				
-		});
-		
-//		ListGrid listGrid = new ListGrid() {  
-//            public DataSource getRelatedDataSource(ListGridRecord record) {  
-//                return ItemSupplyXmlDS.getInstance();  
-//            }  
+		});  
 		
 	}
 	
@@ -114,28 +110,32 @@ public class Salvation implements EntryPoint {
 	}
 
 	private void addPerson(){
-		final HashSet<Date> dates = new HashSet();
+		final HashSet<Date> dates = new HashSet<Date>();
 		
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		HorizontalPanel buttonsPanel = new HorizontalPanel();
 		
+		DynamicForm form = new DynamicForm();
+		
 		final TextItem textBox = new TextItem();
 		textBox.setTitle("Name");
 		
-		DynamicForm form = new DynamicForm();
+		form.setFields(textBox);
 		
-		 final ListBox listBox = new ListBox();
-		 listBox.addItem("DiplomaManager");
-		 listBox.addItem("Reviewer");
-		 //listBox.setVisibleItemCount(2);
+		final ListBox listBox = new ListBox();
+		listBox.addItem("DiplomaManager");
+		listBox.addItem("Reviewer");
 
 		DatePicker datePicker = new DatePicker();
 		datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
-		      public void onValueChange(ValueChangeEvent<Date> event) {
-		    	  dates.add(event.getValue());
-		    	  SC.say(event.getValue().toString() + " Added to unavailable dates ");
-		      }
-		    });
+			@SuppressWarnings("deprecation")
+			public void onValueChange(ValueChangeEvent<Date> event) {
+		    	  if(dates.add(event.getValue())){
+		    		  SC.say(event.getValue().getDate() +"/"+ event.getValue().getMonth()
+		    			  + "/2" + event.getValue().getYear() + " Added to unavailable dates ");
+		    	  }
+			}
+		});
 		
 		Button oneMoreButton = new Button("One More");
 		oneMoreButton.addClickHandler(new ClickHandler() {
@@ -153,6 +153,9 @@ public class Salvation implements EntryPoint {
 		back.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
+				Reviewers.clear();
+				DiplomaLeaders.clear();
+				DiplomaWorks.clear();
 				onModuleLoad();
 			}				
 		});
@@ -160,13 +163,12 @@ public class Salvation implements EntryPoint {
 		Button next = new Button("Next");
 		next.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				getPerson(dates,textBox,listBox);
 				RootPanel.get("mainDiv").clear();
             	addDiploma();
 				
 			}			
 		});
-		
-		form.setFields(textBox);
 		
 		horizontalPanel.add(form);
 		horizontalPanel.add(datePicker);
@@ -192,14 +194,12 @@ public class Salvation implements EntryPoint {
 			SC.say("Error accured :) Maybe nothing was entered");
 		}
 		
-	}
-	
-	
-	
+	}	
 	
 	private void addDiploma() {
 		
-		HorizontalPanel thirdHorizontalPanel = new HorizontalPanel();
+		HorizontalPanel buttonHorizontalPanel = new HorizontalPanel();
+		HorizontalPanel listsHorizontalPanel = new HorizontalPanel();
 		VerticalPanel mainVerticalPanel = new VerticalPanel();
 		
 		TextItem projectNameTextBox = new TextItem();
@@ -213,11 +213,17 @@ public class Salvation implements EntryPoint {
 		DynamicForm diplomantsNameForm = new DynamicForm();
 		diplomantsNameForm.setFields(diplomantsNameTextBox);
 		
+		ListBox diplomaLeadersListBox = new ListBox();
+		Iterator<DiplomaLeader> i = DiplomaLeaders.iterator();
+		while(i.hasNext()){
+			diplomaLeadersListBox.addItem(i.next().getName());
+		}
 		
-		
-		
-//		ComboBoxItem specialtiesCombo = new ComboBoxItem();
-//		specialtiesCombo.setTitle("Specialty");
+		ListBox reviewersListBox = new ListBox();
+		Iterator<Reviewer> k = Reviewers.iterator();
+		while(k.hasNext()){
+			reviewersListBox.addItem(k.next().getName());
+		}
 		
 		ListBox specialtiesListBox = new ListBox();
 		specialtiesListBox.setTitle("Specialty");
@@ -235,27 +241,28 @@ public class Salvation implements EntryPoint {
 		back.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
-				onModuleLoad();
+				addPerson();
 			}				
 		});
 				
 		
 		mainVerticalPanel.add(projectNameForm);
-		
 		mainVerticalPanel.add(diplomantsNameForm);
-		
 		mainVerticalPanel.add(specialtiesListBox);
 
+		buttonHorizontalPanel.add(back);
+		buttonHorizontalPanel.add(oneMoreButton);
+		buttonHorizontalPanel.add(submitButton);
 		
-		thirdHorizontalPanel.add(submitButton);
-		thirdHorizontalPanel.add(oneMoreButton);
+		listsHorizontalPanel.add(diplomaLeadersListBox);
+		listsHorizontalPanel.add(reviewersListBox);
 		
-		mainVerticalPanel.add(thirdHorizontalPanel);
-		mainVerticalPanel.add(back);
+		mainVerticalPanel.add(listsHorizontalPanel);
+		mainVerticalPanel.add(buttonHorizontalPanel);
 		
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
 	}
-	
+
 	private void editDiploma() {
 		
 		final Button back = new Button("Back");
@@ -273,8 +280,6 @@ public class Salvation implements EntryPoint {
 
           @Override  
           protected Canvas getExpansionComponent(final ListGridRecord record) {  
-
-              final ListGrid grid = this;  
 
               VLayout layout = new VLayout(5);  
               layout.setPadding(5);  
