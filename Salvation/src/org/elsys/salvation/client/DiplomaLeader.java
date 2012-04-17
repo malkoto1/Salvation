@@ -6,11 +6,11 @@ import java.util.HashSet;
 public class DiplomaLeader {
 	private String name;
 	private HashSet<Date> unavailableDates;
-	
+
 	public DiplomaLeader(String name, HashSet<Date> unavailableDates) {
 		super();
 		this.name = name;
-		this.unavailableDates.addAll(unavailableDates);
+		this.unavailableDates = unavailableDates;
 	}
 
 	public String getName() {
@@ -28,4 +28,5 @@ public class DiplomaLeader {
 	public void setUnavailableDates(HashSet<Date> unavailableDates) {
 		this.unavailableDates.addAll(unavailableDates) ;
 	}
+
 }

@@ -6,11 +6,11 @@ import java.util.HashSet;
 public class Reviewer {
 	private String name;
 	private HashSet<Date> unavailableDates;
-	
+
 	public Reviewer(String name, HashSet<Date> unavailableDates) {
 		super();
 		this.name = name;
-		this.unavailableDates.addAll(unavailableDates);
+		this.unavailableDates = unavailableDates;
 	}
 
 	public String getName() {

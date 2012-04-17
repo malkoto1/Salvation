@@ -34,9 +34,9 @@ public class Salvation implements EntryPoint {
 	
 	private java.util.Date startDate;
 	private java.util.Date endDate;
-	private HashSet<Reviewer> Reviewers;
-	private HashSet<DiplomaLeader> DiplomaLeaders;
-	private HashSet<DiplomaWork> DiplomaWorks;
+	private HashSet<Reviewer> Reviewers = new HashSet<Reviewer>();
+	private HashSet<DiplomaLeader> DiplomaLeaders = new HashSet<DiplomaLeader>();
+	private HashSet<DiplomaWork> DiplomaWorks = new HashSet<DiplomaWork>();
 	
 	
 	public void onModuleLoad() {
