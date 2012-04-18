@@ -37,8 +37,9 @@ public class Salvation implements EntryPoint {
 	private Date endDate = new Date();
 	private HashSet<Reviewer> Reviewers = new HashSet<Reviewer>();
 	private HashSet<DiplomaLeader> DiplomaLeaders = new HashSet<DiplomaLeader>();
-	private HashSet<DiplomaWork> DiplomaWorks = new HashSet<DiplomaWork>();
-	
+	private HashSet<DiplomaWork> SoftwareWorks = new HashSet<DiplomaWork>();
+	private HashSet<DiplomaWork> HardwareWorks = new HashSet<DiplomaWork>();
+	private HashSet<DiplomaWork> NetWorks = new HashSet<DiplomaWork>();
 	
 	public void onModuleLoad() {
 		
@@ -76,18 +77,17 @@ public class Salvation implements EntryPoint {
 		
 		DateRangeItem dateRangeItem = new DateRangeItem("dri", "Date Range");  
         dateRangeItem.setAllowRelativeDates(true);  
-        DateRange dateRange = new DateRange();  
+        final DateRange dateRange = new DateRange();  
         dateRange.setRelativeStartDate(RelativeDate.YESTERDAY);  
         dateRange.setRelativeEndDate(RelativeDate.YESTERDAY);  
         dateRangeItem.setValue(dateRange);
-        
-        startDate = dateRange.getStartDate();
-        endDate = dateRange.getEndDate();
 		
         Button nextButton = new Button("Next");
 
         nextButton.addClickHandler(new ClickHandler() {  
-            public void onClick(ClickEvent event) {  
+            public void onClick(ClickEvent event) { 
+                startDate = dateRange.getStartDate();
+                endDate = dateRange.getEndDate();
             	RootPanel.get("mainDiv").clear();
             	addPerson();
             }
@@ -155,7 +155,9 @@ public class Salvation implements EntryPoint {
 				RootPanel.get("mainDiv").clear();
 				Reviewers.clear();
 				DiplomaLeaders.clear();
-				DiplomaWorks.clear();
+				SoftwareWorks.clear();
+				HardwareWorks.clear();
+				NetWorks.clear();
 				onModuleLoad();
 			}				
 		});
@@ -202,9 +204,9 @@ public class Salvation implements EntryPoint {
 		HorizontalPanel listsHorizontalPanel = new HorizontalPanel();
 		VerticalPanel mainVerticalPanel = new VerticalPanel();
 		
-		TextItem projectNameTextBox = new TextItem();
+		final TextItem projectNameTextBox = new TextItem();
 		projectNameTextBox.setTitle("Project name");
-		TextItem diplomantsNameTextBox = new TextItem();
+		final TextItem diplomantsNameTextBox = new TextItem();
 		diplomantsNameTextBox.setTitle("Diplomants name/s");
 		
 		
@@ -213,30 +215,35 @@ public class Salvation implements EntryPoint {
 		DynamicForm diplomantsNameForm = new DynamicForm();
 		diplomantsNameForm.setFields(diplomantsNameTextBox);
 		
-		ListBox diplomaLeadersListBox = new ListBox();
+		final ListBox diplomaLeadersListBox = new ListBox();
 		Iterator<DiplomaLeader> i = DiplomaLeaders.iterator();
 		while(i.hasNext()){
 			diplomaLeadersListBox.addItem(i.next().getName());
 		}
 		
-		ListBox reviewersListBox = new ListBox();
+		final ListBox reviewersListBox = new ListBox();
 		Iterator<Reviewer> k = Reviewers.iterator();
 		while(k.hasNext()){
 			reviewersListBox.addItem(k.next().getName());
 		}
 		
-		ListBox specialtiesListBox = new ListBox();
+		final ListBox specialtiesListBox = new ListBox();
 		specialtiesListBox.setTitle("Specialty");
 		specialtiesListBox.addItem("Software");
 		specialtiesListBox.addItem("Hardware");
 		specialtiesListBox.addItem("Communication");
 		
-		
-//		DynamicForm specialtiesForm = new DynamicForm();
-//		specialtiesForm.setFields(specialtiesCombo);
-		
 		Button submitButton = new Button("Submit");
 		Button oneMoreButton = new Button("One More");
+		oneMoreButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				getDiploma(projectNameTextBox,diplomantsNameTextBox,diplomaLeadersListBox,
+						reviewersListBox,specialtiesListBox);
+				RootPanel.get("mainDiv").clear();
+				addDiploma();
+			}				
+		});
+		
 		Button back = new Button("Back");
 		back.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -261,6 +268,14 @@ public class Salvation implements EntryPoint {
 		mainVerticalPanel.add(buttonHorizontalPanel);
 		
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
+	}
+
+	protected void getDiploma(TextItem projectName,
+			TextItem diplomants, ListBox diplomaLeader,
+			ListBox reviewer, ListBox specialtie) {
+//		DiplomaWork work = new DiplomaWork(projectName.getValueAsString(),
+//				diplomants.getValueAsString(), diplomaLeader.getItemText(diplomaLeader.getSelectedIndex()), reviewer);
+		
 	}
 
 	private void editDiploma() {
