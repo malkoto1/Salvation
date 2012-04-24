@@ -54,7 +54,7 @@ public class Salvation implements EntryPoint {
 		
 		
 		RootPanel.get("mainDiv").add(mainHorizontalPanel);
-		
+		//random komentar
 		newData.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
@@ -126,13 +126,14 @@ public class Salvation implements EntryPoint {
 		listBox.addItem("DiplomaManager");
 		listBox.addItem("Reviewer");
 
-		DatePicker datePicker = new DatePicker();
+		final DatePicker datePicker = new DatePicker();
 		datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@SuppressWarnings("deprecation")
 			public void onValueChange(ValueChangeEvent<Date> event) {
 		    	  if(dates.add(event.getValue())){
-		    		  SC.say(event.getValue().getDate() +"/"+ event.getValue().getMonth()
-		    			  + "/2" + event.getValue().getYear() + " Added to unavailable dates ");
+		    		  datePicker.setTransientEnabledOnDates(false, event.getValue());
+		    		  SC.say(event.getValue().getDate() +"/"+ (event.getValue().getMonth()+1)
+		    			  + "/20" + (event.getValue().getYear()-100) + " Added to unavailable dates ");
 		    	  }
 			}
 		});
@@ -273,6 +274,7 @@ public class Salvation implements EntryPoint {
 	protected void getDiploma(TextItem projectName,
 			TextItem diplomants, ListBox diplomaLeader,
 			ListBox reviewer, ListBox specialtie) {
+	//	diplomaLeader
 //		DiplomaWork work = new DiplomaWork(projectName.getValueAsString(),
 //				diplomants.getValueAsString(), diplomaLeader.getItemText(diplomaLeader.getSelectedIndex()), reviewer);
 		
