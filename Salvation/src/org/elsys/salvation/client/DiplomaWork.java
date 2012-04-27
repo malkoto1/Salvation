@@ -1,13 +1,20 @@
 package org.elsys.salvation.client;
 
-import java.util.List;
-
 public class DiplomaWork {
 	private String name;
 	private String diplomants;
 	private String leader;
 	private String reviewer;
 	private String type;
+	
+	public DiplomaWork() {
+		super();
+		this.name = new String();
+		this.diplomants = new String();
+		this.leader = new String();
+		this.reviewer = new String();
+		this.type = new String();
+	}
 	
 	public DiplomaWork(String name, String diplomants,
 			String leader, String reviewer, String type) {
@@ -17,7 +24,7 @@ public class DiplomaWork {
 		this.leader = leader;
 		this.reviewer = reviewer;
 		this.type = type;
-	}
+	}	
 
 	public String getName() {
 		return name;

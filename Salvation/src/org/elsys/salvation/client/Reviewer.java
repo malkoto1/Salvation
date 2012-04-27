@@ -7,6 +7,12 @@ public class Reviewer {
 	private String name;
 	private HashSet<Date> unavailableDates;
 
+	public Reviewer() {
+		super();
+		this.name = new String();
+		this.unavailableDates = new HashSet<Date>();
+	}
+	
 	public Reviewer(String name, HashSet<Date> unavailableDates) {
 		super();
 		this.name = name;

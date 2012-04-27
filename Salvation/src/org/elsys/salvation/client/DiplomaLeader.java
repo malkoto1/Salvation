@@ -7,6 +7,12 @@ public class DiplomaLeader {
 	private String name;
 	private HashSet<Date> unavailableDates;
 
+	public DiplomaLeader() {
+		super();
+		this.name = new String();
+		this.unavailableDates = new HashSet<Date>();
+	}
+	
 	public DiplomaLeader(String name, HashSet<Date> unavailableDates) {
 		super();
 		this.name = name;
