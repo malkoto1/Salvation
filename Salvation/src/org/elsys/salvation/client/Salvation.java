@@ -54,7 +54,6 @@ public class Salvation implements EntryPoint {
 		
 		
 		RootPanel.get("mainDiv").add(mainHorizontalPanel);
-		//random komentar
 		newData.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
@@ -141,13 +140,10 @@ public class Salvation implements EntryPoint {
 		Button oneMoreButton = new Button("One More");
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				
-				//SC.say(listBox.getValue(0));
 				getPerson(dates,textBox,listBox);
 				RootPanel.get("mainDiv").clear();
             	addPerson();
 			}
-		
 		});
 		
 		Button back = new Button("Back");
@@ -234,12 +230,21 @@ public class Salvation implements EntryPoint {
 		specialtiesListBox.addItem("Hardware");
 		specialtiesListBox.addItem("Communication");
 		
+		final ListBox typeListBox = new ListBox();
+		specialtiesListBox.setTitle("Type");
+		specialtiesListBox.addItem("Game");
+		specialtiesListBox.addItem("Media");
+		specialtiesListBox.addItem("Plug-in");
+		specialtiesListBox.addItem("Driver");
+		specialtiesListBox.addItem("Websites");
+		specialtiesListBox.addItem("Other");
+		
 		Button submitButton = new Button("Submit");
 		Button oneMoreButton = new Button("One More");
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				getDiploma(projectNameTextBox,diplomantsNameTextBox,diplomaLeadersListBox,
-						reviewersListBox,specialtiesListBox);
+						reviewersListBox,specialtiesListBox, typeListBox);
 				RootPanel.get("mainDiv").clear();
 				addDiploma();
 			}				
@@ -273,10 +278,17 @@ public class Salvation implements EntryPoint {
 
 	protected void getDiploma(TextItem projectName,
 			TextItem diplomants, ListBox diplomaLeader,
-			ListBox reviewer, ListBox specialtie) {
-	//	diplomaLeader
-//		DiplomaWork work = new DiplomaWork(projectName.getValueAsString(),
-//				diplomants.getValueAsString(), diplomaLeader.getItemText(diplomaLeader.getSelectedIndex()), reviewer);
+			ListBox reviewer, ListBox specialtie, ListBox type) {
+			DiplomaWork work = new DiplomaWork(projectName.getValueAsString(),
+				diplomants.getValueAsString(), diplomaLeader.getItemText(diplomaLeader.getSelectedIndex()),
+				reviewer.getItemText(reviewer.getSelectedIndex()), reviewer.getItemText(reviewer.getSelectedIndex()));
+			if(specialtie.getSelectedIndex() == 0){
+				SoftwareWorks.add(work);
+			}else if(specialtie.getSelectedIndex() == 1) {
+				HardwareWorks.add(work);
+			} else if(specialtie.getSelectedIndex() == 2) {
+				NetWorks.add(work);
+			}
 		
 	}
 

@@ -4,18 +4,19 @@ import java.util.List;
 
 public class DiplomaWork {
 	private String name;
-	private List<String> diplomants;
-	private DiplomaLeader leader;
-	private Reviewer reviewer;
+	private String diplomants;
+	private String leader;
+	private String reviewer;
 	private String type;
 	
-	public DiplomaWork(String name, List<String> diplomants,
-			DiplomaLeader leader, Reviewer reviewer) {
+	public DiplomaWork(String name, String diplomants,
+			String leader, String reviewer, String type) {
 		super();
 		this.name = name;
 		this.diplomants = diplomants;
 		this.leader = leader;
 		this.reviewer = reviewer;
+		this.type = type;
 	}
 
 	public String getName() {
@@ -26,27 +27,27 @@ public class DiplomaWork {
 		this.name = name;
 	}
 
-	public List<String> getDiplomants() {
+	public String getDiplomants() {
 		return diplomants;
 	}
 
-	public void setDiplomants(List<String> diplomants) {
+	public void setDiplomants(String diplomants) {
 		this.diplomants = diplomants;
 	}
 
-	public DiplomaLeader getLeader() {
+	public String getLeader() {
 		return leader;
 	}
 
-	public void setLeader(DiplomaLeader leader) {
+	public void setLeader(String leader) {
 		this.leader = leader;
 	}
 
-	public Reviewer getReviewer() {
+	public String getReviewer() {
 		return reviewer;
 	}
 
-	public void setReviewer(Reviewer reviewer) {
+	public void setReviewer(String reviewer) {
 		this.reviewer = reviewer;
 	}
 	
