@@ -13,6 +13,7 @@
 
   <!-- Other module inherits                                      -->
   <inherits name="com.smartgwt.SmartGwt"/>
+  <inherits name="com.google.gwt.junit.JUnit"/>
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='org.elsys.salvation.client.Salvation'/>
