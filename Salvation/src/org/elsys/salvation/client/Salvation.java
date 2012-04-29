@@ -3,7 +3,6 @@ package org.elsys.salvation.client;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -26,6 +25,8 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateRangeItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -76,12 +77,13 @@ public class Salvation implements EntryPoint {
 		
 		DateRangeItem dateRangeItem = new DateRangeItem("dri", "Date Range");  
         dateRangeItem.setAllowRelativeDates(true);  
+        
         final DateRange dateRange = new DateRange();  
         dateRange.setRelativeStartDate(RelativeDate.YESTERDAY);  
         dateRange.setRelativeEndDate(RelativeDate.YESTERDAY);  
         dateRangeItem.setValue(dateRange);
 		
-        Button nextButton = new Button("Next");
+        final Button nextButton = new Button("Next");
 
         nextButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
@@ -90,17 +92,30 @@ public class Salvation implements EntryPoint {
             	RootPanel.get("mainDiv").clear();
             	addPerson();
             }
-        }); 
+        });  
         
+        Button backButton = new Button("Back");
+        backButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {
+            	RootPanel.get("mainDiv").clear();
+            	onModuleLoad();
+            }
+        });  
         
+//        dateRangeItem.addChangeHandler(new ChangeHandler(){
+//			public void onChange(ChangeEvent event) {
+//				if(dateRange.getStartDate().equals(dateRange.getEndDate())
+//						&& dateRange.getStartDate().equals(RelativeDate.YESTERDAY)){
+//            		nextButton.setDisabled(true);
+//				}
+//			}	
+//        });
         
-//        if(!dateRange.getStartDate().equals(dateRange.getEndDate())){
-//        		nextButton.setDisabled(!nextButton.getDisabled());
-//        }
         DynamicForm form = new DynamicForm();
         form.setItems(dateRangeItem);
         layout.addMember(form);
         layout.addMember(nextButton);
+        layout.addMember(backButton);
         
         layout.draw();
         RootPanel.get("mainDiv").add(layout);
