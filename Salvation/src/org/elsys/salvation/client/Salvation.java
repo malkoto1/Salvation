@@ -7,10 +7,13 @@ import java.util.Iterator;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.smartgwt.client.data.DateRange;
 import com.smartgwt.client.data.RelativeDate;
@@ -23,12 +26,14 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateRangeItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.ChangeEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 
@@ -239,27 +244,41 @@ public class Salvation implements EntryPoint {
 			reviewersListBox.addItem(k.next().getName());
 		}
 		
-		final ListBox specialtiesListBox = new ListBox();
-		specialtiesListBox.setTitle("Specialty");
-		specialtiesListBox.addItem("Software");
-		specialtiesListBox.addItem("Hardware");
-		specialtiesListBox.addItem("Communication");
+		DynamicForm specialtieForm = new DynamicForm();
 		
-		final ListBox typeListBox = new ListBox();
-		specialtiesListBox.setTitle("Type");
-		specialtiesListBox.addItem("Game");
-		specialtiesListBox.addItem("Media");
-		specialtiesListBox.addItem("Plug-in");
-		specialtiesListBox.addItem("Driver");
-		specialtiesListBox.addItem("Websites");
-		specialtiesListBox.addItem("Other");
+		final ComboBoxItem specialtiesComboBox = new ComboBoxItem();  
+		specialtiesComboBox.setTitle("Specialties");   
+		specialtiesComboBox.setType("comboBox");  
+		specialtiesComboBox.setValueMap("Software", "Hardware", "Communication"); 
 		
+	
+		
+		
+		final ComboBoxItem typeComboBox = new ComboBoxItem();
+		typeComboBox.setTitle("Software Type");
+		typeComboBox.setType("comboBox");  
+		typeComboBox.setValueMap("Game", "Media", "Plug-in/Driver", "Web App", "Other");
+		typeComboBox.setDisabled(true);
+		
+		specialtiesComboBox.addChangedHandler(new ChangedHandler(){
+
+			@Override
+			public void onChanged(
+					com.smartgwt.client.widgets.form.fields.events.ChangedEvent event) {
+				if(specialtiesComboBox.getValueAsString().equals("Software")){
+					typeComboBox.setDisabled(false);
+				}else {
+					typeComboBox.setDisabled(true);
+				}
+			}
+		});
+				
 		Button submitButton = new Button("Submit");
 		Button oneMoreButton = new Button("One More");
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				getDiploma(projectNameTextBox,diplomantsNameTextBox,diplomaLeadersListBox,
-						reviewersListBox,specialtiesListBox, typeListBox);
+						reviewersListBox,specialtiesComboBox, typeComboBox);
 				RootPanel.get("mainDiv").clear();
 				addDiploma();
 			}				
@@ -272,11 +291,12 @@ public class Salvation implements EntryPoint {
 				addPerson();
 			}				
 		});
-				
+		
+		specialtieForm.setFields(specialtiesComboBox, typeComboBox);
 		
 		mainVerticalPanel.add(projectNameForm);
 		mainVerticalPanel.add(diplomantsNameForm);
-		mainVerticalPanel.add(specialtiesListBox);
+		mainVerticalPanel.add(specialtieForm);
 
 		buttonHorizontalPanel.add(back);
 		buttonHorizontalPanel.add(oneMoreButton);
@@ -293,15 +313,15 @@ public class Salvation implements EntryPoint {
 
 	protected void getDiploma(TextItem projectName,
 			TextItem diplomants, ListBox diplomaLeader,
-			ListBox reviewer, ListBox specialtie, ListBox type) {
+			ListBox reviewer, ComboBoxItem specialtie, ComboBoxItem type) {
 			DiplomaWork work = new DiplomaWork(projectName.getValueAsString(),
 				diplomants.getValueAsString(), diplomaLeader.getItemText(diplomaLeader.getSelectedIndex()),
-				reviewer.getItemText(reviewer.getSelectedIndex()), reviewer.getItemText(reviewer.getSelectedIndex()));
-			if(specialtie.getSelectedIndex() == 0){
+				reviewer.getItemText(reviewer.getSelectedIndex()), type.getValueAsString());
+			if(specialtie.getValueAsString().equals("Software")){
 				SoftwareWorks.add(work);
-			}else if(specialtie.getSelectedIndex() == 1) {
+			}else if(specialtie.getValueAsString().equals("Hardware")) {
 				HardwareWorks.add(work);
-			} else if(specialtie.getSelectedIndex() == 2) {
+			} else if(specialtie.getValueAsString().equals("Communication")) {
 				NetWorks.add(work);
 			}
 		
