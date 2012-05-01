@@ -7,13 +7,10 @@ import java.util.Iterator;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.smartgwt.client.data.DateRange;
 import com.smartgwt.client.data.RelativeDate;
@@ -26,14 +23,13 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateRangeItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.ChangeEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 
@@ -41,8 +37,7 @@ public class Salvation implements EntryPoint {
 	
 	private Date startDate = new Date();
 	private Date endDate = new Date();
-	private HashSet<Reviewer> Reviewers = new HashSet<Reviewer>();
-	private HashSet<DiplomaLeader> DiplomaLeaders = new HashSet<DiplomaLeader>();
+	private HashSet<Person> People = new HashSet<Person>();
 	private HashSet<DiplomaWork> SoftwareWorks = new HashSet<DiplomaWork>();
 	private HashSet<DiplomaWork> HardwareWorks = new HashSet<DiplomaWork>();
 	private HashSet<DiplomaWork> NetWorks = new HashSet<DiplomaWork>();
@@ -134,16 +129,18 @@ public class Salvation implements EntryPoint {
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		HorizontalPanel buttonsPanel = new HorizontalPanel();
 		
-		DynamicForm form = new DynamicForm();
+		DynamicForm textBoxForm = new DynamicForm();
+		DynamicForm checkBoxForm = new DynamicForm();
 		
 		final TextItem textBox = new TextItem();
 		textBox.setTitle("Name");
 		
-		form.setFields(textBox);
+		textBoxForm.setFields(textBox);
 		
-		final ListBox listBox = new ListBox();
-		listBox.addItem("DiplomaManager");
-		listBox.addItem("Reviewer");
+		final CheckboxItem leaderCheckBox = new CheckboxItem();  
+		leaderCheckBox.setTitle("Diploma Leader");  
+        final CheckboxItem reviewerCheckBox = new CheckboxItem();  
+        reviewerCheckBox.setTitle("Reviewer");  
 
 		final DatePicker datePicker = new DatePicker();
 		datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
@@ -160,7 +157,7 @@ public class Salvation implements EntryPoint {
 		Button oneMoreButton = new Button("One More");
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				getPerson(dates,textBox,listBox);
+				getPerson(dates,textBox,leaderCheckBox,reviewerCheckBox);
 				RootPanel.get("mainDiv").clear();
             	addPerson();
 			}
@@ -170,8 +167,7 @@ public class Salvation implements EntryPoint {
 		back.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
-				Reviewers.clear();
-				DiplomaLeaders.clear();
+				People.clear();
 				SoftwareWorks.clear();
 				HardwareWorks.clear();
 				NetWorks.clear();
@@ -182,16 +178,18 @@ public class Salvation implements EntryPoint {
 		Button next = new Button("Next");
 		next.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				getPerson(dates,textBox,listBox);
+				getPerson(dates,textBox,leaderCheckBox,reviewerCheckBox);
 				RootPanel.get("mainDiv").clear();
             	addDiploma();
 				
 			}			
 		});
 		
-		horizontalPanel.add(form);
+		checkBoxForm.setFields(leaderCheckBox,reviewerCheckBox);
+		
+		horizontalPanel.add(textBoxForm);
 		horizontalPanel.add(datePicker);
-		horizontalPanel.add(listBox);
+		horizontalPanel.add(checkBoxForm);
 		
 
 		buttonsPanel.add(oneMoreButton);
@@ -202,16 +200,9 @@ public class Salvation implements EntryPoint {
 		RootPanel.get("mainDiv").add(buttonsPanel);
 	}
 	
-	private void getPerson(HashSet<Date> set, TextItem box, ListBox list){
-		if(list.getSelectedIndex()==0){
-			DiplomaLeader leader = new DiplomaLeader(box.getValueAsString(), set);
-			DiplomaLeaders.add(leader);
-		}else if(list.getSelectedIndex()==1){
-			Reviewer reviewer = new Reviewer(box.getValueAsString(), set);
-			Reviewers.add(reviewer);
-		}else {
-			SC.say("Error accured :) Maybe nothing was entered");
-		}
+	private void getPerson(HashSet<Date> set, TextItem box, CheckboxItem leader, CheckboxItem reviewer){
+			Person person = new Person(box.getValueAsString(), set, leader.getValueAsBoolean(), reviewer.getValueAsBoolean());
+			People.add(person);
 		
 	}	
 	
@@ -233,15 +224,20 @@ public class Salvation implements EntryPoint {
 		diplomantsNameForm.setFields(diplomantsNameTextBox);
 		
 		final ListBox diplomaLeadersListBox = new ListBox();
-		Iterator<DiplomaLeader> i = DiplomaLeaders.iterator();
+		final ListBox reviewersListBox = new ListBox();
+		
+		Iterator<Person> i = People.iterator();
 		while(i.hasNext()){
-			diplomaLeadersListBox.addItem(i.next().getName());
+			if(i.next().isLeader()){
+				diplomaLeadersListBox.addItem(i.next().getName());
+			}
 		}
 		
-		final ListBox reviewersListBox = new ListBox();
-		Iterator<Reviewer> k = Reviewers.iterator();
+		Iterator<Person> k = People.iterator();
 		while(k.hasNext()){
-			reviewersListBox.addItem(k.next().getName());
+			if(i.next().isReviewer()){
+				reviewersListBox.addItem(i.next().getName());
+			}
 		}
 		
 		DynamicForm specialtieForm = new DynamicForm();
@@ -249,10 +245,7 @@ public class Salvation implements EntryPoint {
 		final ComboBoxItem specialtiesComboBox = new ComboBoxItem();  
 		specialtiesComboBox.setTitle("Specialties");   
 		specialtiesComboBox.setType("comboBox");  
-		specialtiesComboBox.setValueMap("Software", "Hardware", "Communication"); 
-		
-	
-		
+		specialtiesComboBox.setValueMap("Software", "Hardware", "Communication"); 		
 		
 		final ComboBoxItem typeComboBox = new ComboBoxItem();
 		typeComboBox.setTitle("Software Type");
