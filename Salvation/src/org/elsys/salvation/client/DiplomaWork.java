@@ -3,21 +3,21 @@ package org.elsys.salvation.client;
 public class DiplomaWork {
 	private String name;
 	private String diplomants;
-	private String leader;
-	private String reviewer;
+	private Person leader;
+	private Person reviewer;
 	private String type;
 	
 	public DiplomaWork() {
 		super();
 		this.name = new String();
 		this.diplomants = new String();
-		this.leader = new String();
-		this.reviewer = new String();
+		this.leader = new Person();
+		this.reviewer = new Person();
 		this.type = new String();
 	}
 	
 	public DiplomaWork(String name, String diplomants,
-			String leader, String reviewer, String type) {
+			Person leader, Person reviewer, String type) {
 		super();
 		this.name = name;
 		this.diplomants = diplomants;
@@ -42,19 +42,19 @@ public class DiplomaWork {
 		this.diplomants = diplomants;
 	}
 
-	public String getLeader() {
+	public Person getLeader() {
 		return leader;
 	}
 
-	public void setLeader(String leader) {
+	public void setLeader(Person leader) {
 		this.leader = leader;
 	}
 
-	public String getReviewer() {
+	public Person getReviewer() {
 		return reviewer;
 	}
 
-	public void setReviewer(String reviewer) {
+	public void setReviewer(Person reviewer) {
 		this.reviewer = reviewer;
 	}
 	

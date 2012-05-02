@@ -37,7 +37,8 @@ public class Salvation implements EntryPoint {
 	
 	private Date startDate = new Date();
 	private Date endDate = new Date();
-	private HashSet<Person> People = new HashSet<Person>();
+	private HashSet<Person> Leaders = new HashSet<Person>();
+	private HashSet<Person> Reviewers = new HashSet<Person>();
 	private HashSet<DiplomaWork> SoftwareWorks = new HashSet<DiplomaWork>();
 	private HashSet<DiplomaWork> HardwareWorks = new HashSet<DiplomaWork>();
 	private HashSet<DiplomaWork> NetWorks = new HashSet<DiplomaWork>();
@@ -130,17 +131,16 @@ public class Salvation implements EntryPoint {
 		HorizontalPanel buttonsPanel = new HorizontalPanel();
 		
 		DynamicForm textBoxForm = new DynamicForm();
-		DynamicForm checkBoxForm = new DynamicForm();
 		
 		final TextItem textBox = new TextItem();
 		textBox.setTitle("Name");
 		
 		textBoxForm.setFields(textBox);
 		
-		final CheckboxItem leaderCheckBox = new CheckboxItem();  
-		leaderCheckBox.setTitle("Diploma Leader");  
-        final CheckboxItem reviewerCheckBox = new CheckboxItem();  
-        reviewerCheckBox.setTitle("Reviewer");  
+		final ListBox listBox = new ListBox();  
+		listBox.addItem("DiplomaLeader");
+		listBox.addItem("Reviewer");
+		listBox.addItem("Both");
 
 		final DatePicker datePicker = new DatePicker();
 		datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
@@ -157,7 +157,7 @@ public class Salvation implements EntryPoint {
 		Button oneMoreButton = new Button("One More");
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				getPerson(dates,textBox,leaderCheckBox,reviewerCheckBox);
+				getPerson(dates,textBox,listBox);
 				RootPanel.get("mainDiv").clear();
             	addPerson();
 			}
@@ -167,7 +167,8 @@ public class Salvation implements EntryPoint {
 		back.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
-				People.clear();
+				Leaders.clear();
+				Reviewers.clear();
 				SoftwareWorks.clear();
 				HardwareWorks.clear();
 				NetWorks.clear();
@@ -178,18 +179,16 @@ public class Salvation implements EntryPoint {
 		Button next = new Button("Next");
 		next.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				getPerson(dates,textBox,leaderCheckBox,reviewerCheckBox);
+				getPerson(dates,textBox,listBox);
 				RootPanel.get("mainDiv").clear();
             	addDiploma();
 				
 			}			
 		});
 		
-		checkBoxForm.setFields(leaderCheckBox,reviewerCheckBox);
-		
 		horizontalPanel.add(textBoxForm);
 		horizontalPanel.add(datePicker);
-		horizontalPanel.add(checkBoxForm);
+		horizontalPanel.add(listBox);
 		
 
 		buttonsPanel.add(oneMoreButton);
@@ -200,9 +199,19 @@ public class Salvation implements EntryPoint {
 		RootPanel.get("mainDiv").add(buttonsPanel);
 	}
 	
-	private void getPerson(HashSet<Date> set, TextItem box, CheckboxItem leader, CheckboxItem reviewer){
-			Person person = new Person(box.getValueAsString(), set, leader.getValueAsBoolean(), reviewer.getValueAsBoolean());
-			People.add(person);
+	private void getPerson(HashSet<Date> set, TextItem box, ListBox listBox){
+			if(listBox.getSelectedIndex()==0){
+				Person person = new Person(box.getValueAsString(), set);
+				Leaders.add(person);
+			}else if(listBox.getSelectedIndex()==1){
+				Person person = new Person(box.getValueAsString(), set);
+				Reviewers.add(person);
+			}else if(listBox.getSelectedIndex() == 2){
+				Person person = new Person(box.getValueAsString(), set);
+				Leaders.add(person);
+				Reviewers.add(person);
+			}
+			
 		
 	}	
 	
@@ -226,18 +235,16 @@ public class Salvation implements EntryPoint {
 		final ListBox diplomaLeadersListBox = new ListBox();
 		final ListBox reviewersListBox = new ListBox();
 		
-		Iterator<Person> i = People.iterator();
+		Iterator<Person> i = Leaders.iterator();
 		while(i.hasNext()){
-			if(i.next().isLeader()){
-				diplomaLeadersListBox.addItem(i.next().getName());
-			}
+			diplomaLeadersListBox.addItem(i.next().getName());
+			
 		}
 		
-		Iterator<Person> k = People.iterator();
+		Iterator<Person> k = Reviewers.iterator();
 		while(k.hasNext()){
-			if(i.next().isReviewer()){
-				reviewersListBox.addItem(i.next().getName());
-			}
+			reviewersListBox.addItem(k.next().getName());
+			
 		}
 		
 		DynamicForm specialtieForm = new DynamicForm();
