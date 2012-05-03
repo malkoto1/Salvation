@@ -185,7 +185,7 @@ public class Salvation implements EntryPoint {
 				
 			}			
 		});
-		
+			
 		horizontalPanel.add(textBoxForm);
 		horizontalPanel.add(datePicker);
 		horizontalPanel.add(listBox);
@@ -313,17 +313,27 @@ public class Salvation implements EntryPoint {
 
 	protected void getDiploma(TextItem projectName,
 			TextItem diplomants, ListBox diplomaLeader,
-			ListBox reviewer, ComboBoxItem specialtie, ComboBoxItem type) {
-			DiplomaWork work = new DiplomaWork(projectName.getValueAsString(),
-				diplomants.getValueAsString(), diplomaLeader.getItemText(diplomaLeader.getSelectedIndex()),
-				reviewer.getItemText(reviewer.getSelectedIndex()), type.getValueAsString());
-			if(specialtie.getValueAsString().equals("Software")){
-				SoftwareWorks.add(work);
-			}else if(specialtie.getValueAsString().equals("Hardware")) {
-				HardwareWorks.add(work);
-			} else if(specialtie.getValueAsString().equals("Communication")) {
-				NetWorks.add(work);
-			}
+			ListBox diplomaReviewer, ComboBoxItem specialtie, ComboBoxItem type) {
+		
+		Person leader = new Person();
+		Person reviewer = new Person();
+		
+		Iterator<Person> i = Leaders.iterator();
+		while(i.hasNext()){
+			if (i.next().getName().equals(diplomaLeader.getValue(diplomaLeader.getSelectedIndex()))){
+				leader = i.next();
+			}	
+		}
+
+		Iterator<Person> k = Reviewers.iterator();
+		while(k.hasNext()){
+			if (k.next().getName().equals(diplomaReviewer.getValue(diplomaReviewer.getSelectedIndex()))){
+				reviewer = k.next();
+			}	
+		}
+		
+
+		
 		
 	}
 

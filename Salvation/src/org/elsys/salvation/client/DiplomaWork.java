@@ -5,7 +5,6 @@ public class DiplomaWork {
 	private String diplomants;
 	private Person leader;
 	private Person reviewer;
-	private String type;
 	
 	public DiplomaWork() {
 		super();
@@ -13,17 +12,15 @@ public class DiplomaWork {
 		this.diplomants = new String();
 		this.leader = new Person();
 		this.reviewer = new Person();
-		this.type = new String();
 	}
 	
 	public DiplomaWork(String name, String diplomants,
-			Person leader, Person reviewer, String type) {
+			Person leader, Person reviewer) {
 		super();
 		this.name = name;
 		this.diplomants = diplomants;
 		this.leader = leader;
 		this.reviewer = reviewer;
-		this.type = type;
 	}	
 
 	public String getName() {
@@ -57,14 +54,5 @@ public class DiplomaWork {
 	public void setReviewer(Person reviewer) {
 		this.reviewer = reviewer;
 	}
-	
-	
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	};
 	
 }
