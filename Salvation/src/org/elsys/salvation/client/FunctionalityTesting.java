@@ -81,6 +81,19 @@ public class FunctionalityTesting {
 		assertEquals("type", work.getType());
 	}
 	
+	@Test
+	public void defenceTesting(){
+		HashSet<DiplomaWork> set = new HashSet<DiplomaWork>();
+		
+		DiplomaWork diplomaWork = new DiplomaWork("name", "diplomants", new Person("Leader", dateSet()), new Person("Reviewer", dateSet()));
+		SoftwareWork softwareWork = new SoftwareWork("name", "diplomants", new Person("Leader", dateSet()), new Person("Reviewer", dateSet()), "type");
+		set.add(diplomaWork);
+		set.add(softwareWork);
+		Defence defence = new Defence(set);
+		
+		assertEquals(set, defence.getDiplomaWorks());
+	}
+	
 	public HashSet<Date> dateSet(){
 		HashSet<Date> set = new HashSet<Date>();
 		set.add(new Date(1, 2, 2012));

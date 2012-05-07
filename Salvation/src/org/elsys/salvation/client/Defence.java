@@ -1,21 +1,26 @@
 package org.elsys.salvation.client;
 
-import java.util.List;
+import java.util.HashSet;
+
 
 public class Defence {
-	private List<DiplomaWork> diplomaWorks;
+	private HashSet<DiplomaWork> diplomaWorks;
 
-	public Defence(List<DiplomaWork> diplomaWorks) {
+	public Defence(HashSet<DiplomaWork> diplomaWorks) {
 		super();
 		this.diplomaWorks = diplomaWorks;
 	}
 
-	public List<DiplomaWork> getDiplomaWorks() {
+	public HashSet<DiplomaWork> getDiplomaWorks() {
 		return diplomaWorks;
 	}
 
-	public void setDiplomaWorks(List<DiplomaWork> diplomaWorks) {
+	public void setDiplomaWorks(HashSet<DiplomaWork> diplomaWorks) {
 		this.diplomaWorks = diplomaWorks;
+	}
+	
+	public void addDiploma(DiplomaWork work){
+		this.diplomaWorks.add(work);
 	}
 	
 }

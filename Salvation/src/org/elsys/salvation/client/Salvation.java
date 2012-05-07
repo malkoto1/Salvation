@@ -277,7 +277,7 @@ public class Salvation implements EntryPoint {
 		Button oneMoreButton = new Button("One More");
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				getDiploma(projectNameTextBox,diplomantsNameTextBox,diplomaLeadersListBox,
+				//getDiploma(projectNameTextBox,diplomantsNameTextBox,diplomaLeadersListBox,
 						reviewersListBox,specialtiesComboBox, typeComboBox);
 				RootPanel.get("mainDiv").clear();
 				addDiploma();
