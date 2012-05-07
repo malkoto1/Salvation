@@ -88,7 +88,7 @@ public class FunctionalityTesting {
 		DiplomaWork diplomaWork = new DiplomaWork("name", "diplomants", new Person("Leader", dateSet()), new Person("Reviewer", dateSet()));
 		SoftwareWork softwareWork = new SoftwareWork("name", "diplomants", new Person("Leader", dateSet()), new Person("Reviewer", dateSet()), "type");
 		set.add(diplomaWork);
-		set.add(softwareWork);
+		set.add(diplomaWork);
 		Defence defence = new Defence(set);
 		
 		assertEquals(set, defence.getDiplomaWorks());

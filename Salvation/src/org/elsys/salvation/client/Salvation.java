@@ -39,7 +39,7 @@ public class Salvation implements EntryPoint {
 	private Date endDate = new Date();
 	private HashSet<Person> Leaders = new HashSet<Person>();
 	private HashSet<Person> Reviewers = new HashSet<Person>();
-	private HashSet<DiplomaWork> SoftwareWorks = new HashSet<DiplomaWork>();
+	private HashSet<SoftwareWork> SoftwareWorks = new HashSet<SoftwareWork>();
 	private HashSet<DiplomaWork> HardwareWorks = new HashSet<DiplomaWork>();
 	private HashSet<DiplomaWork> NetWorks = new HashSet<DiplomaWork>();
 	
@@ -278,7 +278,7 @@ public class Salvation implements EntryPoint {
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//getDiploma(projectNameTextBox,diplomantsNameTextBox,diplomaLeadersListBox,
-						reviewersListBox,specialtiesComboBox, typeComboBox);
+						//reviewersListBox,specialtiesComboBox, typeComboBox);
 				RootPanel.get("mainDiv").clear();
 				addDiploma();
 			}				
@@ -332,7 +332,7 @@ public class Salvation implements EntryPoint {
 			}	
 		}
 		
-
+		
 		
 		
 	}
