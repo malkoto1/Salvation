@@ -1,19 +1,21 @@
 package org.elsys.salvation.client;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 public class Person {
 	private String name;
-	private HashSet<Date> availableDates;
+	private ArrayList<Date> availableDates;
 
 	public Person() {
 		super();
 		this.name = new String();
-		this.availableDates = new HashSet<Date>();
+		this.availableDates = new ArrayList<Date>();
 	}
 
-	public Person(String name, HashSet<Date> availableDates) {
+	public Person(String name, ArrayList<Date> availableDates) {
 		super();
 		this.name = name;
 		this.availableDates = availableDates;
@@ -27,11 +29,11 @@ public class Person {
 		this.name = name;
 	}
 
-	public HashSet<Date> getAvailableDates() {
+	public ArrayList<Date> getAvailableDates() {
 		return availableDates;
 	}
 
-	public void setAvailableDates(HashSet<Date> availableDates) {
+	public void setAvailableDates(ArrayList<Date> availableDates) {
 		this.availableDates.addAll(availableDates);
 	}
 

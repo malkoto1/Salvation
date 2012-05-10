@@ -1,5 +1,6 @@
 package org.elsys.salvation.client;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -40,19 +41,19 @@ public class Salvation implements EntryPoint {
 	private Date endDate = new Date();
 	private HashSet<Person> Leaders = new HashSet<Person>();
 	private HashSet<Person> Reviewers = new HashSet<Person>();
-	private HashSet<SoftwareWork> SoftwareWorks = new HashSet<SoftwareWork>();
-	private HashSet<DiplomaWork> HardwareWorks = new HashSet<DiplomaWork>();
-	private HashSet<DiplomaWork> NetWorks = new HashSet<DiplomaWork>();
+	private ArrayList<SoftwareWork> SoftwareWorks = new ArrayList<SoftwareWork>();
+	private ArrayList<DiplomaWork> HardwareWorks = new ArrayList<DiplomaWork>();
+	private ArrayList<DiplomaWork> NetWorks = new ArrayList<DiplomaWork>();
 
 	public void onModuleLoad() {
 
 		final Button newData = new Button("New");
-		final Button existingData = new Button("Existing");
+		//final Button existingData = new Button("Existing");
 		final HorizontalPanel mainHorizontalPanel = new HorizontalPanel();
 		final Label lastUpdatedLabel = new Label();
 
 		mainHorizontalPanel.add(newData);
-		mainHorizontalPanel.add(existingData);
+		//mainHorizontalPanel.add(existingData);
 		mainHorizontalPanel.add(lastUpdatedLabel);
 
 		RootPanel.get("mainDiv").add(mainHorizontalPanel);
@@ -63,12 +64,12 @@ public class Salvation implements EntryPoint {
 			}
 		});
 
-		existingData.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				RootPanel.get("mainDiv").clear();
-				editDiploma();
-			}
-		});
+//		existingData.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				RootPanel.get("mainDiv").clear();
+//				editDiploma();
+//			}
+//		});
 
 	}
 
@@ -124,7 +125,7 @@ public class Salvation implements EntryPoint {
 	}
 
 	private void addPerson() {
-		final HashSet<Date> dates = new HashSet<Date>();
+		final ArrayList<Date> dates = new ArrayList<Date>();
 
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		HorizontalPanel buttonsPanel = new HorizontalPanel();
@@ -200,7 +201,7 @@ public class Salvation implements EntryPoint {
 		RootPanel.get("mainDiv").add(buttonsPanel);
 	}
 
-	private void getPerson(HashSet<Date> set, TextItem box, ListBox listBox) {
+	private void getPerson(ArrayList<Date> set, TextItem box, ListBox listBox) {
 		if (listBox.getSelectedIndex() == 0) {
 			Person person = new Person(box.getValueAsString(), set);
 			Leaders.add(person);
@@ -339,17 +340,22 @@ public class Salvation implements EntryPoint {
 			}
 		}
 
-		if (specialtie.getValueAsString().equalsIgnoreCase("Software")) {
+		if (specialtie.getValueAsString().equalsIgnoreCase("Software")
+				&& !SoftwareWorks.contains(new DiplomaWork(projectName.getValueAsString(),
+						diplomants.getValueAsString(), leader, reviewer))) {
 			SoftwareWorks.add(new SoftwareWork(projectName.getValueAsString(),
 					diplomants.getValueAsString(), leader, reviewer, type
 							.getValueAsString()));
 
-		} else if (specialtie.getValueAsString().equalsIgnoreCase("Hardware")) {
+		} else if (specialtie.getValueAsString().equalsIgnoreCase("Hardware")
+				&& !HardwareWorks.contains(new DiplomaWork(projectName.getValueAsString(),
+						diplomants.getValueAsString(), leader, reviewer))) {
 			HardwareWorks.add(new DiplomaWork(projectName.getValueAsString(),
 					diplomants.getValueAsString(), leader, reviewer));
 
 		} else if (specialtie.getValueAsString().equalsIgnoreCase(
-				"Communication")) {
+				"Communication") && !NetWorks.contains(new DiplomaWork(projectName.getValueAsString(),
+						diplomants.getValueAsString(), leader, reviewer))) {
 			NetWorks.add(new DiplomaWork(projectName.getValueAsString(),
 					diplomants.getValueAsString(), leader, reviewer));
 		}
@@ -358,24 +364,46 @@ public class Salvation implements EntryPoint {
 
 	private void generateDefences() {
 
-		Iterator<DiplomaWork> i = HardwareWorks.iterator();
-		Defence def = new Defence(HardwareWorks);
+		Defence firstHardDefence = new Defence();
+		
+		firstHardDefence.setFirstPerson(HardwareWorks.get(0).getLeader());
+		
+		for(int i = 0; i<HardwareWorks.size(); i++){
+			if(HardwareWorks.get(i).getLeader().equals(firstHardDefence.getFirstPerson())){
+				firstHardDefence.addDiploma(HardwareWorks.get(i));
+			}
+		}
+		
+		for(int f=0; f<HardwareWorks.size();f++){
+			int broken = 0;
+			if (!HardwareWorks.get(f).getLeader().equals(firstHardDefence.getFirstPerson())){
+				for(int i=0 ; i<firstHardDefence.getFirstPerson().getAvailableDates().size(); i++){
+					for (int k = 0; k< HardwareWorks.get(1).getLeader().getAvailableDates().size();k++){
+						if(firstHardDefence.getFirstPerson().getAvailableDates().get(i).equals(HardwareWorks.get(1).getLeader().getAvailableDates().get(k))){
+							firstHardDefence.setDay(firstHardDefence.getFirstPerson().getAvailableDates().get(i));
+							firstHardDefence.setSecondPerson(HardwareWorks.get(1).getLeader());
+							broken = 1;
+							break;
+						}
+					}
+					if(broken ==1){
+						break;
+					}
+				}
+			}
+			if(broken ==1){
+				break;
+			}
+		}
+		
+		for(int i = 0; i<HardwareWorks.size(); i++){
+			if(HardwareWorks.get(i).getLeader().equals(firstHardDefence.getSecondPerson())){
+				firstHardDefence.addDiploma(HardwareWorks.get(i));
+			}
+		}
+		
+		//HardwareWorks.removeAll(firstHardDefence.getDiplomaWorks());
 
-		Person firstPerson = i.next().getLeader();
-		Person secondPerson = i.next().getLeader();
-		Person thirdPerson = i.next().getLeader();
-		Person forthPerson = i.next().getLeader();
-
-		/*
-		 * while (!HardwareWorks.isEmpty()) {
-		 * 
-		 * if (firstPerson.getAvailableDates() == secondPerson
-		 * .getAvailableDates()) { def.setDay(secondPerson.getAvailableDates());
-		 * secondPerson.add(); } if (firstPerson.getAvailableDates() ==
-		 * thirdPerson .getAvailableDates()) { secondPerson.add(); } if
-		 * (firstPerson.getAvailableDates() == forthPerson .getAvailableDates())
-		 * { secondPerson.add(); } }
-		 */
 
 	}
 
