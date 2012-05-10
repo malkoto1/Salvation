@@ -402,6 +402,24 @@ public class Salvation implements EntryPoint {
 			}
 		}
 		
+		if(firstHardDefence.getDiplomaWorks().size()>=7
+				|| firstHardDefence.getDiplomaWorks().size()<=9){
+			firstHardDefence.setThirdPerson(HardwareWorks.get(0).getReviewer());
+			for(int i = 1; i<firstHardDefence.getDiplomaWorks().size(); i++){
+				if (!firstHardDefence.getDiplomaWorks().get(i).getReviewer().equals(firstHardDefence.getThirdPerson())){
+					firstHardDefence.setFourthPerson(HardwareWorks.get(i).getReviewer());
+					break;
+				}
+			}
+		}else if(firstHardDefence.getDiplomaWorks().size() > 9){
+			int size = firstHardDefence.getDiplomaWorks().size()-1;
+			while(firstHardDefence.getDiplomaWorks().size()>9){
+				firstHardDefence.getDiplomaWorks().remove(size);
+			}
+		}else if(firstHardDefence.getDiplomaWorks().size()<7){
+			//povtarq se turseneto na lider i se dobavq za 4etvurti reviewer
+		}
+		
 		//HardwareWorks.removeAll(firstHardDefence.getDiplomaWorks());
 
 

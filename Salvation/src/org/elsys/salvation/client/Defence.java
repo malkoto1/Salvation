@@ -1,17 +1,18 @@
 package org.elsys.salvation.client;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
 public class Defence {
-	private HashSet<DiplomaWork> diplomaWorks;
+	private ArrayList<DiplomaWork> diplomaWorks;
 	private Date day ;
 	private Person firstPerson;
 	private Person secondPerson;
 	private Person thirdPerson;
 	private Person fourthPerson;	
 	
-	public Defence(HashSet<DiplomaWork> diplomaWorks, Date day,
+	public Defence(ArrayList<DiplomaWork> diplomaWorks, Date day,
 			Person firstPerson, Person secondPerson, Person thirdPerson,
 			Person fourthPerson) {
 		super();
@@ -25,7 +26,7 @@ public class Defence {
 
 	public Defence() {
 		super();
-		this.diplomaWorks = new HashSet<DiplomaWork>();
+		this.diplomaWorks = new ArrayList<DiplomaWork>();
 		this.day = new Date();
 		this.firstPerson = new Person();
 		this.secondPerson = new Person();
@@ -33,11 +34,11 @@ public class Defence {
 		this.fourthPerson = new Person();
 	}
 
-	public HashSet<DiplomaWork> getDiplomaWorks() {
+	public ArrayList<DiplomaWork> getDiplomaWorks() {
 		return diplomaWorks;
 	}
 
-	public void setDiplomaWorks(HashSet<DiplomaWork> diplomaWorks) {
+	public void setDiplomaWorks(ArrayList<DiplomaWork> diplomaWorks) {
 		this.diplomaWorks = diplomaWorks;
 	}
 
