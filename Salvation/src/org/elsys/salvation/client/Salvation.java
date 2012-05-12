@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import javax.servlet.UnavailableException;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -26,7 +24,6 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateRangeItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -125,6 +122,10 @@ public class Salvation implements EntryPoint {
 	}
 
 	private void addPerson() {
+		SC.say("Pick dates in this range:" + startDate.getDate() + "/" + (startDate.getMonth()+1)
+				+ "/20" + (startDate.getYear()-100) + " : " + endDate.getDate() + "/" 
+				+ (endDate.getMonth()+1)
+				+ "/20" + (endDate.getYear()-100));
 		final ArrayList<Date> dates = new ArrayList<Date>();
 
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
@@ -363,66 +364,105 @@ public class Salvation implements EntryPoint {
 	}
 
 	private void generateDefences() {
-
-		Defence firstHardDefence = new Defence();
+		HashSet<Date> takenDates = new HashSet<Date>();
+		ArrayList<Defence> netDefences= new ArrayList<Defence>();
+		ArrayList<Defence> hardDefences= new ArrayList<Defence>();
 		
-		firstHardDefence.setFirstPerson(HardwareWorks.get(0).getLeader());
-		
-		for(int i = 0; i<HardwareWorks.size(); i++){
-			if(HardwareWorks.get(i).getLeader().equals(firstHardDefence.getFirstPerson())){
-				firstHardDefence.addDiploma(HardwareWorks.get(i));
-			}
+		while(HardwareWorks.size()>0){
+			hardDefences.add(defaultGeneration(HardwareWorks, takenDates));
 		}
 		
-		for(int f=0; f<HardwareWorks.size();f++){
+		while(NetWorks.size()>0){
+			netDefences.add(defaultGeneration(NetWorks, takenDates));
+		}
+
+
+	}
+	
+	private Defence  defaultGeneration(ArrayList<DiplomaWork> works, HashSet<Date> takenDates){
+		Defence defence = new Defence();
+
+		defence.setFirstPerson(works.get(0).getLeader());
+
+		for (int i = 0; i < works.size(); i++) {
+			if (works.get(i).getLeader()
+					.equals(defence.getFirstPerson())) {
+				defence.addDiploma(works.get(i));
+			}
+		}		
+
+		for (int f = 0; f < works.size(); f++) {
 			int broken = 0;
-			if (!HardwareWorks.get(f).getLeader().equals(firstHardDefence.getFirstPerson())){
-				for(int i=0 ; i<firstHardDefence.getFirstPerson().getAvailableDates().size(); i++){
-					for (int k = 0; k< HardwareWorks.get(1).getLeader().getAvailableDates().size();k++){
-						if(firstHardDefence.getFirstPerson().getAvailableDates().get(i).equals(HardwareWorks.get(1).getLeader().getAvailableDates().get(k))){
-							firstHardDefence.setDay(firstHardDefence.getFirstPerson().getAvailableDates().get(i));
-							firstHardDefence.setSecondPerson(HardwareWorks.get(1).getLeader());
+			if (!works.get(f).getLeader()
+					.equals(defence.getFirstPerson())) {
+				for (int i = 0; i < defence.getFirstPerson()
+						.getAvailableDates().size(); i++) {
+					for (int k = 0; k < works.get(1).getLeader()
+							.getAvailableDates().size(); k++) {
+						if (defence
+								.getFirstPerson()
+								.getAvailableDates()
+								.get(i)
+								.equals(works.get(1).getLeader()
+										.getAvailableDates().get(k))) {
+							defence.setDay(defence
+									.getFirstPerson().getAvailableDates()
+									.get(i));
+							defence.setSecondPerson(works.get(
+									1).getLeader());
+							takenDates.add(defence.getDay());
 							broken = 1;
 							break;
 						}
 					}
-					if(broken ==1){
+					if (broken == 1) {
 						break;
 					}
 				}
 			}
-			if(broken ==1){
+			if (broken == 1) {
 				break;
 			}
 		}
 		
-		for(int i = 0; i<HardwareWorks.size(); i++){
-			if(HardwareWorks.get(i).getLeader().equals(firstHardDefence.getSecondPerson())){
-				firstHardDefence.addDiploma(HardwareWorks.get(i));
+		for(int i = 0; i<works.size(); i++){
+			if(works.get(i).getLeader().equals(defence.getSecondPerson())){
+				defence.addDiploma(works.get(i));
 			}
 		}
 		
-		if(firstHardDefence.getDiplomaWorks().size()>=7
-				|| firstHardDefence.getDiplomaWorks().size()<=9){
-			firstHardDefence.setThirdPerson(HardwareWorks.get(0).getReviewer());
-			for(int i = 1; i<firstHardDefence.getDiplomaWorks().size(); i++){
-				if (!firstHardDefence.getDiplomaWorks().get(i).getReviewer().equals(firstHardDefence.getThirdPerson())){
-					firstHardDefence.setFourthPerson(HardwareWorks.get(i).getReviewer());
+		if(works.isEmpty()){
+			return defence;
+		}
+		
+		if(defence.getDiplomaWorks().size()>=7
+				|| defence.getDiplomaWorks().size()<=9){
+			defence.setThirdPerson(defence.getDiplomaWorks().get(0).getReviewer());
+			for(int i = 1; i<defence.getDiplomaWorks().size(); i++){
+				if (!defence.getDiplomaWorks().get(i).getReviewer().equals(defence.getThirdPerson())){
+					defence.setFourthPerson(works.get(i).getReviewer());
+					break;
+				}
+			}		
+		}else if(defence.getDiplomaWorks().size() > 9){
+			int size = defence.getDiplomaWorks().size()-1;
+			while(defence.getDiplomaWorks().size()>9){
+				defence.getDiplomaWorks().remove(size-1);
+			}
+			defence.setThirdPerson(defence.getDiplomaWorks().get(0).getReviewer());
+			for(int i = 1; i<defence.getDiplomaWorks().size(); i++){
+				if (!defence.getDiplomaWorks().get(i).getReviewer().equals(defence.getThirdPerson())){
+					defence.setFourthPerson(defence.getDiplomaWorks().get(i).getReviewer());
 					break;
 				}
 			}
-		}else if(firstHardDefence.getDiplomaWorks().size() > 9){
-			int size = firstHardDefence.getDiplomaWorks().size()-1;
-			while(firstHardDefence.getDiplomaWorks().size()>9){
-				firstHardDefence.getDiplomaWorks().remove(size);
-			}
-		}else if(firstHardDefence.getDiplomaWorks().size()<7){
+		}else if(defence.getDiplomaWorks().size()<7){
 			//povtarq se turseneto na lider i se dobavq za 4etvurti reviewer
 		}
 		
-		//HardwareWorks.removeAll(firstHardDefence.getDiplomaWorks());
-
-
+		works.removeAll(defence.getDiplomaWorks());
+		
+		return defence;
 	}
 
 	private void editDiploma() {
