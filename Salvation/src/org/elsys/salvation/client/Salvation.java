@@ -34,14 +34,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class Salvation implements EntryPoint {
 
-	private Date startDate = new Date();
-	private Date endDate = new Date();
-	private HashSet<Person> Leaders = new HashSet<Person>();
-	private HashSet<Person> Reviewers = new HashSet<Person>();
-	private ArrayList<SoftwareWork> SoftwareWorks = new ArrayList<SoftwareWork>();
-	private ArrayList<DiplomaWork> HardwareWorks = new ArrayList<DiplomaWork>();
-	private ArrayList<DiplomaWork> NetWorks = new ArrayList<DiplomaWork>();
-
+	private FunctionalityManager FM = new FunctionalityManager();
+	
 	public void onModuleLoad() {
 
 		final Button newData = new Button("New");
@@ -86,8 +80,8 @@ public class Salvation implements EntryPoint {
 
 		nextButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				startDate = dateRange.getStartDate();
-				endDate = dateRange.getEndDate();
+				FM.setStartDate(dateRange.getStartDate());
+				FM.setEndDate(dateRange.getEndDate());
 				RootPanel.get("mainDiv").clear();
 				addPerson();
 			}
@@ -122,10 +116,10 @@ public class Salvation implements EntryPoint {
 	}
 
 	private void addPerson() {
-		SC.say("Pick dates in this range:" + startDate.getDate() + "/" + (startDate.getMonth()+1)
-				+ "/20" + (startDate.getYear()-100) + " : " + endDate.getDate() + "/" 
-				+ (endDate.getMonth()+1)
-				+ "/20" + (endDate.getYear()-100));
+		SC.say("Pick dates in this range:" + FM.getStartDate().getDate() + "/" + (FM.getStartDate().getMonth()+1)
+				+ "/20" + (FM.getStartDate().getYear()-100) + " : " + FM.getEndDate().getDate() + "/" 
+				+ (FM.getEndDate().getMonth()+1)
+				+ "/20" + (FM.getEndDate().getYear()-100));
 		final ArrayList<Date> dates = new ArrayList<Date>();
 
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
@@ -161,7 +155,7 @@ public class Salvation implements EntryPoint {
 		Button oneMoreButton = new Button("One More");
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				getPerson(dates, textBox, listBox);
+				FM.getPerson(dates, textBox, listBox);
 				RootPanel.get("mainDiv").clear();
 				addPerson();
 			}
@@ -171,11 +165,7 @@ public class Salvation implements EntryPoint {
 		back.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
-				Leaders.clear();
-				Reviewers.clear();
-				SoftwareWorks.clear();
-				HardwareWorks.clear();
-				NetWorks.clear();
+				FM.clearAllData();
 				onModuleLoad();
 			}
 		});
@@ -183,7 +173,7 @@ public class Salvation implements EntryPoint {
 		Button next = new Button("Next");
 		next.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				getPerson(dates, textBox, listBox);
+				FM.getPerson(dates, textBox, listBox);
 				RootPanel.get("mainDiv").clear();
 				addDiploma();
 
@@ -200,21 +190,6 @@ public class Salvation implements EntryPoint {
 
 		RootPanel.get("mainDiv").add(horizontalPanel);
 		RootPanel.get("mainDiv").add(buttonsPanel);
-	}
-
-	private void getPerson(ArrayList<Date> set, TextItem box, ListBox listBox) {
-		if (listBox.getSelectedIndex() == 0) {
-			Person person = new Person(box.getValueAsString(), set);
-			Leaders.add(person);
-		} else if (listBox.getSelectedIndex() == 1) {
-			Person person = new Person(box.getValueAsString(), set);
-			Reviewers.add(person);
-		} else if (listBox.getSelectedIndex() == 2) {
-			Person person = new Person(box.getValueAsString(), set);
-			Leaders.add(person);
-			Reviewers.add(person);
-		}
-
 	}
 
 	private void addDiploma() {
@@ -236,13 +211,13 @@ public class Salvation implements EntryPoint {
 		final ListBox diplomaLeadersListBox = new ListBox();
 		final ListBox reviewersListBox = new ListBox();
 
-		Iterator<Person> i = Leaders.iterator();
+		Iterator<Person> i = FM.getLeaders().iterator();
 		while (i.hasNext()) {
 			diplomaLeadersListBox.addItem(i.next().getName());
 
 		}
 
-		Iterator<Person> k = Reviewers.iterator();
+		Iterator<Person> k = FM.getReviewers().iterator();
 		while (k.hasNext()) {
 			reviewersListBox.addItem(k.next().getName());
 
@@ -312,157 +287,6 @@ public class Salvation implements EntryPoint {
 		mainVerticalPanel.add(buttonHorizontalPanel);
 
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
-	}
-
-	protected void getDiploma(TextItem projectName, TextItem diplomants,
-			ListBox diplomaLeader, ListBox diplomaReviewer,
-			ComboBoxItem specialtie, ComboBoxItem type) {
-
-		Person leader = new Person();
-		Person reviewer = new Person();
-
-		Iterator<Person> i = Leaders.iterator();
-		while (i.hasNext()) {
-			if (i.next()
-					.getName()
-					.equals(diplomaLeader.getValue(diplomaLeader
-							.getSelectedIndex()))) {
-				leader = i.next();
-			}
-		}
-
-		Iterator<Person> k = Reviewers.iterator();
-		while (k.hasNext()) {
-			if (k.next()
-					.getName()
-					.equals(diplomaReviewer.getValue(diplomaReviewer
-							.getSelectedIndex()))) {
-				reviewer = k.next();
-			}
-		}
-
-		if (specialtie.getValueAsString().equalsIgnoreCase("Software")
-				&& !SoftwareWorks.contains(new DiplomaWork(projectName.getValueAsString(),
-						diplomants.getValueAsString(), leader, reviewer))) {
-			SoftwareWorks.add(new SoftwareWork(projectName.getValueAsString(),
-					diplomants.getValueAsString(), leader, reviewer, type
-							.getValueAsString()));
-
-		} else if (specialtie.getValueAsString().equalsIgnoreCase("Hardware")
-				&& !HardwareWorks.contains(new DiplomaWork(projectName.getValueAsString(),
-						diplomants.getValueAsString(), leader, reviewer))) {
-			HardwareWorks.add(new DiplomaWork(projectName.getValueAsString(),
-					diplomants.getValueAsString(), leader, reviewer));
-
-		} else if (specialtie.getValueAsString().equalsIgnoreCase(
-				"Communication") && !NetWorks.contains(new DiplomaWork(projectName.getValueAsString(),
-						diplomants.getValueAsString(), leader, reviewer))) {
-			NetWorks.add(new DiplomaWork(projectName.getValueAsString(),
-					diplomants.getValueAsString(), leader, reviewer));
-		}
-
-	}
-
-	private void generateDefences() {
-		HashSet<Date> takenDates = new HashSet<Date>();
-		ArrayList<Defence> netDefences= new ArrayList<Defence>();
-		ArrayList<Defence> hardDefences= new ArrayList<Defence>();
-		
-		while(HardwareWorks.size()>0){
-			hardDefences.add(defaultGeneration(HardwareWorks, takenDates));
-		}
-		
-		while(NetWorks.size()>0){
-			netDefences.add(defaultGeneration(NetWorks, takenDates));
-		}
-
-
-	}
-	
-	private Defence  defaultGeneration(ArrayList<DiplomaWork> works, HashSet<Date> takenDates){
-		Defence defence = new Defence();
-
-		defence.setFirstPerson(works.get(0).getLeader());
-
-		for (int i = 0; i < works.size(); i++) {
-			if (works.get(i).getLeader()
-					.equals(defence.getFirstPerson())) {
-				defence.addDiploma(works.get(i));
-			}
-		}		
-
-		for (int f = 0; f < works.size(); f++) {
-			int broken = 0;
-			if (!works.get(f).getLeader()
-					.equals(defence.getFirstPerson())) {
-				for (int i = 0; i < defence.getFirstPerson()
-						.getAvailableDates().size(); i++) {
-					for (int k = 0; k < works.get(1).getLeader()
-							.getAvailableDates().size(); k++) {
-						if (defence
-								.getFirstPerson()
-								.getAvailableDates()
-								.get(i)
-								.equals(works.get(1).getLeader()
-										.getAvailableDates().get(k))) {
-							defence.setDay(defence
-									.getFirstPerson().getAvailableDates()
-									.get(i));
-							defence.setSecondPerson(works.get(
-									1).getLeader());
-							takenDates.add(defence.getDay());
-							broken = 1;
-							break;
-						}
-					}
-					if (broken == 1) {
-						break;
-					}
-				}
-			}
-			if (broken == 1) {
-				break;
-			}
-		}
-		
-		for(int i = 0; i<works.size(); i++){
-			if(works.get(i).getLeader().equals(defence.getSecondPerson())){
-				defence.addDiploma(works.get(i));
-			}
-		}
-		
-		if(works.isEmpty()){
-			return defence;
-		}
-		
-		if(defence.getDiplomaWorks().size()>=7
-				|| defence.getDiplomaWorks().size()<=9){
-			defence.setThirdPerson(defence.getDiplomaWorks().get(0).getReviewer());
-			for(int i = 1; i<defence.getDiplomaWorks().size(); i++){
-				if (!defence.getDiplomaWorks().get(i).getReviewer().equals(defence.getThirdPerson())){
-					defence.setFourthPerson(works.get(i).getReviewer());
-					break;
-				}
-			}		
-		}else if(defence.getDiplomaWorks().size() > 9){
-			int size = defence.getDiplomaWorks().size()-1;
-			while(defence.getDiplomaWorks().size()>9){
-				defence.getDiplomaWorks().remove(size-1);
-			}
-			defence.setThirdPerson(defence.getDiplomaWorks().get(0).getReviewer());
-			for(int i = 1; i<defence.getDiplomaWorks().size(); i++){
-				if (!defence.getDiplomaWorks().get(i).getReviewer().equals(defence.getThirdPerson())){
-					defence.setFourthPerson(defence.getDiplomaWorks().get(i).getReviewer());
-					break;
-				}
-			}
-		}else if(defence.getDiplomaWorks().size()<7){
-			//povtarq se turseneto na lider i se dobavq za 4etvurti reviewer
-		}
-		
-		works.removeAll(defence.getDiplomaWorks());
-		
-		return defence;
 	}
 
 	private void editDiploma() {

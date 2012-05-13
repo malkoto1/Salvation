@@ -2,8 +2,6 @@ package org.elsys.salvation.client;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 
 public class Person {
 	private String name;
