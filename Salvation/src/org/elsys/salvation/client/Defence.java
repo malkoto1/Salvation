@@ -44,6 +44,10 @@ public class Defence {
 	public void addDiploma(DiplomaWork work) {
 		this.diplomaWorks.add(work);
 	}
+	
+	public void removeDiploma() {
+		this.diplomaWorks.remove(diplomaWorks.size()-1);
+	}
 
 	public Date getDay() {
 		return day;

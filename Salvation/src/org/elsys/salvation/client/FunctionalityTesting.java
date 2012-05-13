@@ -143,6 +143,21 @@ public class FunctionalityTesting {
 	}
 	
 	@Test
+	public void defenceRemoveDiplomaWork(){
+		Defence defence = new Defence();
+		
+		DiplomaWork diplomaWork = new DiplomaWork("name", "diplomants",
+				new Person("Leader", dateList()), new Person("Reviewer",
+						dateList()));
+		defence.addDiploma(diplomaWork);
+		defence.addDiploma(diplomaWork);
+		
+		defence.removeDiploma();
+		
+		assertEquals(1,defence.getDiplomaWorks().size());
+	}
+	
+	@Test
 	public void defenceSetDay(){
 		Defence defence = new Defence();
 		Date day = new Date(2012,10,10);
