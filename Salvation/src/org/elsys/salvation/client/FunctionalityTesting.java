@@ -322,6 +322,70 @@ public class FunctionalityTesting {
 		assertEquals(0, FM.getHardwareWorks().size());
 		assertEquals(0, FM.getNetWorks().size());	
 	}
+	
+	@Test
+	public void lessThan9Generation(){
+		FunctionalityManager FM = new FunctionalityManager();
+		HashSet<Date> dateSet = new HashSet<Date>();
+		ArrayList<DiplomaWork> works = new ArrayList<DiplomaWork>();
+		Defence defence = new Defence();
+		
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader1", dateList()), new Person("Reviewer1",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader2", dateList()), new Person("Reviewer2",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader3", dateList()), new Person("Reviewer3",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader1", dateList()), new Person("Reviewer1",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader1", dateList()), new Person("Reviewer1",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader1", dateList()), new Person("Reviewer3",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader2", dateList()), new Person("Reviewer1",dateList())));
+		
+		FM.setHardwareWorks(works);
+		
+		defence = FM.defaultGeneration(FM.getHardwareWorks(), dateSet);
+		
+		assertEquals(7,defence.getDiplomaWorks().size());	
+	}
+	
+	@Test
+	public void moreThan9Generation(){
+		FunctionalityManager FM = new FunctionalityManager();
+		HashSet<Date> dateSet = new HashSet<Date>();
+		ArrayList<DiplomaWork> works = new ArrayList<DiplomaWork>();
+		Defence defence = new Defence();
+		
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader1", dateList()), new Person("Reviewer1",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader2", dateList()), new Person("Reviewer2",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader3", dateList()), new Person("Reviewer3",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader1", dateList()), new Person("Reviewer1",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader1", dateList()), new Person("Reviewer1",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader1", dateList()), new Person("Reviewer3",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader2", dateList()), new Person("Reviewer1",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader1", dateList()), new Person("Reviewer1",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader1", dateList()), new Person("Reviewer3",dateList())));
+		works.add(new DiplomaWork("name", "diplomants",
+				new Person("Leader2", dateList()), new Person("Reviewer1",dateList())));
+		
+		FM.setHardwareWorks(works);
+		
+		defence = FM.defaultGeneration(FM.getHardwareWorks(), dateSet);
+		
+		assertEquals(9,defence.getDiplomaWorks().size());	
+	}
 
 	public ArrayList<Date> dateList() {
 		ArrayList<Date> set = new ArrayList<Date>();
