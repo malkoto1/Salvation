@@ -90,14 +90,14 @@ public class FunctionalityManager {
 	public void getPerson(ArrayList<Date> set, TextItem box, ListBox listBox) {
 		if (listBox.getSelectedIndex() == 0) {
 			Person person = new Person(box.getValueAsString(), set);
-			Leaders.add(person);
+			this.Leaders.add(person);
 		} else if (listBox.getSelectedIndex() == 1) {
 			Person person = new Person(box.getValueAsString(), set);
-			Reviewers.add(person);
+			this.Reviewers.add(person);
 		} else if (listBox.getSelectedIndex() == 2) {
 			Person person = new Person(box.getValueAsString(), set);
-			Leaders.add(person);
-			Reviewers.add(person);
+			this.Leaders.add(person);
+			this.Reviewers.add(person);
 		}
 
 	}
@@ -229,7 +229,7 @@ public class FunctionalityManager {
 			works.removeAll(defence.getDiplomaWorks());
 
 			if (defence.getDiplomaWorks().size() >= 7
-					|| defence.getDiplomaWorks().size() <= 9) {
+					&& defence.getDiplomaWorks().size() <= 9) {
 				defence.setThirdPerson(defence.getDiplomaWorks().get(0)
 						.getReviewer());
 				for (int i = 1; i < defence.getDiplomaWorks().size(); i++) {
@@ -289,7 +289,7 @@ public class FunctionalityManager {
 				works.removeAll(defence.getDiplomaWorks());
 
 				if (defence.getDiplomaWorks().size() >= 7
-						|| defence.getDiplomaWorks().size() <= 9) {
+						&& defence.getDiplomaWorks().size() <= 9) {
 					defence.setFourthPerson(defence.getDiplomaWorks()
 							.get(defence.getDiplomaWorks().size() - 1)
 							.getReviewer());

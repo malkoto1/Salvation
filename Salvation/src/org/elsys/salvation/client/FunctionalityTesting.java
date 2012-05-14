@@ -353,38 +353,130 @@ public class FunctionalityTesting {
 	}
 	
 	@Test
-	public void moreThan9Generation(){
+	public void moreThan9Generation1(){
 		FunctionalityManager FM = new FunctionalityManager();
 		HashSet<Date> dateSet = new HashSet<Date>();
 		ArrayList<DiplomaWork> works = new ArrayList<DiplomaWork>();
 		Defence defence = new Defence();
 		
+		Person leader1 = new Person("Leader1", dateList());
+		Person leader2 = new Person("Leader2", dateList());
+		Person leader3 = new Person("Leader3", dateList());
+		Person reviewer1 = new Person("Reviewer1",dateList());
+		Person reviewer2 = new Person("Reviewer2",dateList());
+		Person reviewer3 = new Person("Reviewer3",dateList());
+		
 		works.add(new DiplomaWork("name", "diplomants",
-				new Person("Leader1", dateList()), new Person("Reviewer1",dateList())));
+				leader1,reviewer1));
 		works.add(new DiplomaWork("name", "diplomants",
-				new Person("Leader2", dateList()), new Person("Reviewer2",dateList())));
+				leader2,reviewer2));
 		works.add(new DiplomaWork("name", "diplomants",
-				new Person("Leader3", dateList()), new Person("Reviewer3",dateList())));
+				leader3,reviewer2));
 		works.add(new DiplomaWork("name", "diplomants",
-				new Person("Leader1", dateList()), new Person("Reviewer1",dateList())));
+				leader1,reviewer3));
 		works.add(new DiplomaWork("name", "diplomants",
-				new Person("Leader1", dateList()), new Person("Reviewer1",dateList())));
+				leader1,reviewer1));
 		works.add(new DiplomaWork("name", "diplomants",
-				new Person("Leader1", dateList()), new Person("Reviewer3",dateList())));
+				leader2,reviewer3));
 		works.add(new DiplomaWork("name", "diplomants",
-				new Person("Leader2", dateList()), new Person("Reviewer1",dateList())));
+				leader2,reviewer1));
 		works.add(new DiplomaWork("name", "diplomants",
-				new Person("Leader1", dateList()), new Person("Reviewer1",dateList())));
+				leader1,reviewer1));
 		works.add(new DiplomaWork("name", "diplomants",
-				new Person("Leader1", dateList()), new Person("Reviewer3",dateList())));
+				leader3,reviewer1));
 		works.add(new DiplomaWork("name", "diplomants",
-				new Person("Leader2", dateList()), new Person("Reviewer1",dateList())));
+				leader2,reviewer3));
 		
 		FM.setHardwareWorks(works);
 		
 		defence = FM.defaultGeneration(FM.getHardwareWorks(), dateSet);
 		
-		assertEquals(9,defence.getDiplomaWorks().size());	
+		assertEquals(8,defence.getDiplomaWorks().size());	
+	}
+	
+	@Test
+	public void moreThan9Generation2(){
+		FunctionalityManager FM = new FunctionalityManager();
+		HashSet<Date> dateSet = new HashSet<Date>();
+		ArrayList<DiplomaWork> works = new ArrayList<DiplomaWork>();
+		Defence defence = new Defence();
+		
+		Person leader1 = new Person("Leader1", dateList());
+		Person leader2 = new Person("Leader2", dateList());
+		Person reviewer1 = new Person("Reviewer1",dateList());
+		Person reviewer2 = new Person("Reviewer2",dateList());
+		Person reviewer3 = new Person("Reviewer3",dateList());
+		
+		works.add(new DiplomaWork("name", "diplomants",
+				leader1,reviewer1));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader2,reviewer2));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader1,reviewer2));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader1,reviewer3));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader1,reviewer1));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader2,reviewer3));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader2,reviewer1));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader1,reviewer1));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader1,reviewer1));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader2,reviewer3));
+		
+		FM.setHardwareWorks(works);
+		
+		defence = FM.defaultGeneration(FM.getHardwareWorks(), dateSet);
+		
+		assertEquals(8,defence.getDiplomaWorks().size());
+		assertEquals(2,FM.getHardwareWorks().size());
+	}
+	
+	@Test
+	public void moreThan9Generation3(){
+		FunctionalityManager FM = new FunctionalityManager();
+		HashSet<Date> dateSet = new HashSet<Date>();
+		ArrayList<DiplomaWork> works = new ArrayList<DiplomaWork>();
+		Defence defence = new Defence();
+		
+		Person leader1 = new Person("Leader1", dateList());
+		Person leader2 = new Person("Leader2", dateList());
+		Person leader3 = new Person("Leader3", dateList());
+		Person reviewer1 = new Person("Reviewer1",dateList());
+		Person reviewer2 = new Person("Reviewer2",dateList());
+		Person reviewer3 = new Person("Reviewer3",dateList());
+		
+		works.add(new DiplomaWork("name", "diplomants",
+				leader1,reviewer1));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader2,reviewer2));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader1,reviewer2));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader1,reviewer3));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader1,reviewer1));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader2,reviewer3));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader3,reviewer1));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader3,reviewer1));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader3,reviewer1));
+		works.add(new DiplomaWork("name", "diplomants",
+				leader3,reviewer3));
+		
+		FM.setHardwareWorks(works);
+		
+		defence = FM.defaultGeneration(FM.getHardwareWorks(), dateSet);
+		
+		assertEquals(8,defence.getDiplomaWorks().size());
+		assertEquals(2,FM.getHardwareWorks().size());
 	}
 
 	public ArrayList<Date> dateList() {
