@@ -23,12 +23,11 @@ public class FunctionalityManager {
 		super();
 		startDate = new Date();
 		endDate = new Date();
-		HashSet<Person> Leaders = new HashSet<Person>();
-		HashSet<Person> Reviewers = new HashSet<Person>();
-		ArrayList<SoftwareWork> SoftwareWorks = new ArrayList<SoftwareWork>();
-		ArrayList<DiplomaWork> HardwareWorks = new ArrayList<DiplomaWork>();
-		ArrayList<DiplomaWork> NetWorks = new ArrayList<DiplomaWork>();
-
+		Leaders = new HashSet<Person>();
+		Reviewers = new HashSet<Person>();
+		SoftwareWorks = new ArrayList<SoftwareWork>();
+		HardwareWorks = new ArrayList<DiplomaWork>();
+		NetWorks = new ArrayList<DiplomaWork>();
 	}
 
 	public Date getStartDate() {
@@ -54,6 +53,10 @@ public class FunctionalityManager {
 	public void setLeaders(HashSet<Person> leaders) {
 		Leaders = leaders;
 	}
+	
+	public void addLeader(Person leader){
+		this.Leaders.add(leader);
+	}
 
 	public HashSet<Person> getReviewers() {
 		return Reviewers;
@@ -61,6 +64,10 @@ public class FunctionalityManager {
 
 	public void setReviewers(HashSet<Person> reviewers) {
 		Reviewers = reviewers;
+	}
+	
+	public void addReviewer(Person reviewer){
+		Reviewers.add(reviewer);
 	}
 
 	public ArrayList<SoftwareWork> getSoftwareWorks() {
@@ -87,21 +94,21 @@ public class FunctionalityManager {
 		NetWorks = netWorks;
 	}
 
+	
 	public void getPerson(ArrayList<Date> set, TextItem box, ListBox listBox) {
 		if (listBox.getSelectedIndex() == 0) {
 			Person person = new Person(box.getValueAsString(), set);
-			this.Leaders.add(person);
+			Leaders.add(person);
 		} else if (listBox.getSelectedIndex() == 1) {
 			Person person = new Person(box.getValueAsString(), set);
-			this.Reviewers.add(person);
+			Reviewers.add(person);
 		} else if (listBox.getSelectedIndex() == 2) {
 			Person person = new Person(box.getValueAsString(), set);
-			this.Leaders.add(person);
-			this.Reviewers.add(person);
+			Leaders.add(person);
+			Reviewers.add(person);
 		}
-
 	}
-
+	
 	public void getDiploma(TextItem projectName, TextItem diplomants,
 			ListBox diplomaLeader, ListBox diplomaReviewer,
 			ComboBoxItem specialtie, ComboBoxItem type) {
@@ -341,6 +348,18 @@ public class FunctionalityManager {
 
 		works.removeAll(defence.getDiplomaWorks());
 
+		return defence;
+	}
+	
+	public Defence softwareDefenceTypeGeneration(String specialtie){
+		Defence defence = new Defence();
+		
+			for(int i = 0; i< SoftwareWorks.size(); i++){
+				if(SoftwareWorks.get(i).getType().equals(specialtie)){
+					defence.addDiploma(SoftwareWorks.get(i));
+				}
+			}
+		 
 		return defence;
 	}
 

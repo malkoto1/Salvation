@@ -95,15 +95,6 @@ public class Salvation implements EntryPoint {
 			}
 		});
 
-		// dateRangeItem.addChangeHandler(new ChangeHandler(){
-		// public void onChange(ChangeEvent event) {
-		// if(dateRange.getStartDate().equals(dateRange.getEndDate())
-		// && dateRange.getStartDate().equals(RelativeDate.YESTERDAY)){
-		// nextButton.setDisabled(true);
-		// }
-		// }
-		// });
-
 		DynamicForm form = new DynamicForm();
 		form.setItems(dateRangeItem);
 		layout.addMember(form);
@@ -234,7 +225,7 @@ public class Salvation implements EntryPoint {
 		final ComboBoxItem typeComboBox = new ComboBoxItem();
 		typeComboBox.setTitle("Software Type");
 		typeComboBox.setType("comboBox");
-		typeComboBox.setValueMap("Game", "Media", "Plug-in/Driver", "Web App",
+		typeComboBox.setValueMap("Game", "Media", "Plug-in/Driver", "Web Site/App",
 				"Other");
 		typeComboBox.setDisabled(true);
 
