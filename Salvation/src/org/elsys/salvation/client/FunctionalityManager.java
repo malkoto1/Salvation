@@ -53,8 +53,8 @@ public class FunctionalityManager {
 	public void setLeaders(HashSet<Person> leaders) {
 		Leaders = leaders;
 	}
-	
-	public void addLeader(Person leader){
+
+	public void addLeader(Person leader) {
 		this.Leaders.add(leader);
 	}
 
@@ -65,8 +65,8 @@ public class FunctionalityManager {
 	public void setReviewers(HashSet<Person> reviewers) {
 		Reviewers = reviewers;
 	}
-	
-	public void addReviewer(Person reviewer){
+
+	public void addReviewer(Person reviewer) {
 		Reviewers.add(reviewer);
 	}
 
@@ -94,7 +94,6 @@ public class FunctionalityManager {
 		NetWorks = netWorks;
 	}
 
-	
 	public void getPerson(ArrayList<Date> set, TextItem box, ListBox listBox) {
 		if (listBox.getSelectedIndex() == 0) {
 			Person person = new Person(box.getValueAsString(), set);
@@ -108,7 +107,7 @@ public class FunctionalityManager {
 			Reviewers.add(person);
 		}
 	}
-	
+
 	public void getDiploma(TextItem projectName, TextItem diplomants,
 			ListBox diplomaLeader, ListBox diplomaReviewer,
 			ComboBoxItem specialtie, ComboBoxItem type) {
@@ -179,6 +178,7 @@ public class FunctionalityManager {
 	public Defence defaultGeneration(ArrayList<DiplomaWork> works,
 			HashSet<Date> takenDates) {
 		Defence defence = new Defence();
+		ArrayList<Person> jury = new ArrayList<Person>();
 
 		if (works.size() <= 9) {
 			for (int i = 0; i < works.size(); i++) {
@@ -187,31 +187,28 @@ public class FunctionalityManager {
 			works.clear();
 			return defence;
 		} else {
-			defence.setFirstPerson(works.get(0).getLeader());
+			jury.add(works.get(0).getLeader());
 
 			for (int i = 0; i < works.size(); i++) {
-				if (works.get(i).getLeader().equals(defence.getFirstPerson())) {
+				if (works.get(i).getLeader().equals(jury.get(0))) {
 					defence.addDiploma(works.get(i));
 				}
 			}
 
 			for (int f = 0; f < works.size(); f++) {
 				int broken = 0;
-				if (!works.get(f).getLeader().equals(defence.getFirstPerson())) {
-					for (int i = 0; i < defence.getFirstPerson()
-							.getAvailableDates().size(); i++) {
+				if (!works.get(f).getLeader().equals(jury.get(0))) {
+					for (int i = 0; i < jury.get(0).getAvailableDates().size(); i++) {
 						for (int k = 0; k < works.get(f).getLeader()
 								.getAvailableDates().size(); k++) {
-							if (defence
-									.getFirstPerson()
+							if (jury.get(0)
 									.getAvailableDates()
 									.get(i)
 									.equals(works.get(f).getLeader()
 											.getAvailableDates().get(k))) {
-								defence.setDay(defence.getFirstPerson()
-										.getAvailableDates().get(i));
-								defence.setSecondPerson(works.get(f)
-										.getLeader());
+								defence.setDay(jury.get(0).getAvailableDates()
+										.get(i));
+								jury.add(works.get(f).getLeader());
 								takenDates.add(defence.getDay());
 								broken = 1;
 								break;
@@ -228,7 +225,7 @@ public class FunctionalityManager {
 			}
 
 			for (int i = 0; i < works.size(); i++) {
-				if (works.get(i).getLeader().equals(defence.getSecondPerson())) {
+				if (works.get(i).getLeader().equals(jury.get(1))) {
 					defence.addDiploma(works.get(i));
 				}
 			}
@@ -237,13 +234,11 @@ public class FunctionalityManager {
 
 			if (defence.getDiplomaWorks().size() >= 7
 					&& defence.getDiplomaWorks().size() <= 9) {
-				defence.setThirdPerson(defence.getDiplomaWorks().get(0)
-						.getReviewer());
+				jury.add(defence.getDiplomaWorks().get(0).getReviewer());
 				for (int i = 1; i < defence.getDiplomaWorks().size(); i++) {
 					if (!defence.getDiplomaWorks().get(i).getReviewer()
-							.equals(defence.getThirdPerson())) {
-						defence.setFourthPerson(defence.getDiplomaWorks()
-								.get(i).getReviewer());
+							.equals(jury.get(2))) {
+						jury.add(defence.getDiplomaWorks().get(i).getReviewer());
 						break;
 					}
 				}
@@ -253,13 +248,11 @@ public class FunctionalityManager {
 							defence.getDiplomaWorks().size() - 1));
 					defence.removeDiploma();
 				}
-				defence.setThirdPerson(defence.getDiplomaWorks().get(0)
-						.getReviewer());
+				jury.add(defence.getDiplomaWorks().get(0).getReviewer());
 				for (int i = 1; i < defence.getDiplomaWorks().size(); i++) {
 					if (!defence.getDiplomaWorks().get(i).getReviewer()
-							.equals(defence.getThirdPerson())) {
-						defence.setFourthPerson(defence.getDiplomaWorks()
-								.get(i).getReviewer());
+							.equals(jury.get(2))) {
+						jury.add(defence.getDiplomaWorks().get(i).getReviewer());
 						break;
 					}
 				}
@@ -269,14 +262,13 @@ public class FunctionalityManager {
 
 				for (int f = 0; f < works.size(); f++) {
 					int broken = 0;
-					if (!works.get(f).getLeader()
-							.equals(defence.getSecondPerson())) {
+					if (!works.get(f).getLeader().equals(jury.get(1))) {
 						for (int k = 0; k < works.get(f).getLeader()
 								.getAvailableDates().size(); k++) {
 							if (defence.getDay().equals(
 									works.get(f).getLeader()
 											.getAvailableDates().get(k))) {
-								defence.setThirdPerson(works.get(f).getLeader());
+								jury.add(works.get(f).getLeader());
 								broken = 1;
 								break;
 							}
@@ -288,8 +280,7 @@ public class FunctionalityManager {
 				}
 
 				for (int i = 0; i < works.size(); i++) {
-					if (works.get(i).getLeader()
-							.equals(defence.getThirdPerson())) {
+					if (works.get(i).getLeader().equals(jury.get(2))) {
 						defence.addDiploma(works.get(i));
 					}
 				}
@@ -297,7 +288,7 @@ public class FunctionalityManager {
 
 				if (defence.getDiplomaWorks().size() >= 7
 						&& defence.getDiplomaWorks().size() <= 9) {
-					defence.setFourthPerson(defence.getDiplomaWorks()
+					jury.add(defence.getDiplomaWorks()
 							.get(defence.getDiplomaWorks().size() - 1)
 							.getReviewer());
 				} else if (defence.getDiplomaWorks().size() > 9) {
@@ -306,19 +297,17 @@ public class FunctionalityManager {
 								defence.getDiplomaWorks().size() - 1));
 						defence.removeDiploma();
 					}
-					defence.setFourthPerson(defence.getDiplomaWorks().get(0)
-							.getReviewer());
+					jury.add(defence.getDiplomaWorks().get(0).getReviewer());
 				} else if (defence.getDiplomaWorks().size() < 7) {
 					for (int f = 0; f < works.size(); f++) {
 						int broken = 0;
-						if (!works.get(f).getLeader()
-								.equals(defence.getThirdPerson())) {
+						if (!works.get(f).getLeader().equals(jury.get(2))) {
 							for (int k = 0; k < works.get(f).getLeader()
 									.getAvailableDates().size(); k++) {
 								if (defence.getDay().equals(
 										works.get(f).getLeader()
 												.getAvailableDates().get(k))) {
-									defence.setFourthPerson(works.get(f).getLeader());
+									jury.add(works.get(f).getLeader());
 									broken = 1;
 									break;
 								}
@@ -330,16 +319,20 @@ public class FunctionalityManager {
 					}
 
 					for (int i = 0; i < works.size(); i++) {
-						if (works.get(i).getLeader()
-								.equals(defence.getFourthPerson())) {
+						if (works.get(i).getLeader().equals(jury.get(3))) {
 							defence.addDiploma(works.get(i));
 						}
 					}
 					works.removeAll(defence.getDiplomaWorks());
-					if(defence.getDiplomaWorks().size()<8){
-						while(defence.getDiplomaWorks().size()<8){
-							defence.addDiploma(works.get(works.size()-1));
-							works.remove(works.get(works.size()-1));
+					if (defence.getDiplomaWorks().size() < 8) {
+						while (defence.getDiplomaWorks().size() < 8) {
+							defence.addDiploma(works.get(works.size() - 1));
+							works.remove(works.get(works.size() - 1));
+						}
+					}else if(defence.getDiplomaWorks().size() > 8){
+						while (defence.getDiplomaWorks().size() > 8) {
+							works.add(defence.getDiplomaWorks().get(defence.getDiplomaWorks().size()-1));
+							defence.removeDiploma();
 						}
 					}
 				}
@@ -350,16 +343,65 @@ public class FunctionalityManager {
 
 		return defence;
 	}
-	
-	public Defence softwareDefenceTypeGeneration(String specialtie){
+
+	public Defence softwareDefenceTypeGeneration(String specialtie,
+			HashSet<Date> takenDates) {
 		Defence defence = new Defence();
-		
-			for(int i = 0; i< SoftwareWorks.size(); i++){
-				if(SoftwareWorks.get(i).getType().equals(specialtie)){
-					defence.addDiploma(SoftwareWorks.get(i));
+		ArrayList<Person> jury = new ArrayList<Person>();
+		for (int i = 0; i < SoftwareWorks.size(); i++) {
+			if (SoftwareWorks.get(i).getType().equals(specialtie)) {
+				defence.addDiploma(SoftwareWorks.get(i));
+			}
+		}
+
+		for (int i = 0; i < defence.getDiplomaWorks().size(); i++) {
+			if (!jury.contains(defence.getDiplomaWorks().get(i).getLeader())) {
+				jury.add(defence.getDiplomaWorks().get(i).getLeader());
+			}
+		}
+
+		for (int i = 0; i < defence.getDiplomaWorks().size(); i++) {
+			if (!jury.contains(defence.getDiplomaWorks().get(i).getReviewer())) {
+				jury.add(defence.getDiplomaWorks().get(i).getReviewer());
+			}
+		}
+
+		if (jury.size() > 4) {
+			while (jury.size() > 4) {
+				jury.remove(jury.size() - 1);
+			}
+		}
+
+		Person busyMan = new Person();
+		busyMan = jury.get(0);
+
+		for (int i = 1; i < jury.size(); i++) {
+			if (jury.get(i).getAvailableDates().size() < busyMan.getAvailableDates().size()) {
+				busyMan = jury.get(i);
+			}
+		}
+
+		boolean setDate = false;
+
+		for (int i = 0; i < busyMan.getAvailableDates().size(); i++) {
+			if (!takenDates.contains(busyMan.getAvailableDates().get(i))) {
+				defence.setDay(busyMan.getAvailableDates().get(i));
+				setDate = true;
+				break;
+			}
+		}
+
+		if (!setDate) {
+			for (int i = 0; i < jury.get(2).getAvailableDates().size(); i++) {
+				if (!takenDates.contains(jury.get(2).getAvailableDates().get(i))) {
+					defence.setDay(jury.get(2).getAvailableDates().get(i));
+					break;
 				}
 			}
-		 
+		}
+
+		defence.setJury(jury);
+
 		return defence;
 	}
 

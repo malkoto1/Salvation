@@ -6,31 +6,20 @@ import java.util.Date;
 public class Defence {
 	private ArrayList<DiplomaWork> diplomaWorks;
 	private Date day ;
-	private Person firstPerson;
-	private Person secondPerson;
-	private Person thirdPerson;
-	private Person fourthPerson;	
+	private ArrayList<Person> jury;	
 	
-	public Defence(ArrayList<DiplomaWork> diplomaWorks, Date day,
-			Person firstPerson, Person secondPerson, Person thirdPerson,
-			Person fourthPerson) {
+	public Defence(ArrayList<DiplomaWork> diplomaWorks, Date day, ArrayList<Person> jury) {
 		super();
 		this.diplomaWorks = diplomaWorks;
 		this.day = day;
-		this.firstPerson = firstPerson;
-		this.secondPerson = secondPerson;
-		this.thirdPerson = thirdPerson;
-		this.fourthPerson = fourthPerson;
+		this.jury = jury;
 	}
 
 	public Defence() {
 		super();
 		this.diplomaWorks = new ArrayList<DiplomaWork>();
 		this.day = new Date();
-		this.firstPerson = new Person();
-		this.secondPerson = new Person();
-		this.thirdPerson = new Person();
-		this.fourthPerson = new Person();
+		this.jury = new ArrayList<Person>();
 	}
 
 	public ArrayList<DiplomaWork> getDiplomaWorks() {
@@ -57,36 +46,12 @@ public class Defence {
 		this.day = day;
 	}
 
-	public Person getFirstPerson() {
-		return firstPerson;
+	public ArrayList<Person> getJury() {
+		return jury;
 	}
 
-	public void setFirstPerson(Person firstPerson) {
-		this.firstPerson = firstPerson;
-	}
-
-	public Person getSecondPerson() {
-		return secondPerson;
-	}
-
-	public void setSecondPerson(Person secondPerson) {
-		this.secondPerson = secondPerson;
-	}
-
-	public Person getThirdPerson() {
-		return thirdPerson;
-	}
-
-	public void setThirdPerson(Person thirdPerson) {
-		this.thirdPerson = thirdPerson;
-	}
-
-	public Person getFourthPerson() {
-		return fourthPerson;
-	}
-
-	public void setFourthPerson(Person fourthPerson) {
-		this.fourthPerson = fourthPerson;
+	public void setJury (ArrayList<Person> jury) {
+		this.jury = jury;
 	}
 
 }
