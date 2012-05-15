@@ -29,22 +29,23 @@ import com.smartgwt.client.widgets.form.fields.DateRangeItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class Salvation implements EntryPoint {
 
-	private FunctionalityManager FM = new FunctionalityManager();
-	
+	public FunctionalityManager FM = new FunctionalityManager();
+
 	public void onModuleLoad() {
 
 		final Button newData = new Button("New");
-		//final Button existingData = new Button("Existing");
+		// final Button existingData = new Button("Existing");
 		final HorizontalPanel mainHorizontalPanel = new HorizontalPanel();
 		final Label lastUpdatedLabel = new Label();
 
 		mainHorizontalPanel.add(newData);
-		//mainHorizontalPanel.add(existingData);
+		// mainHorizontalPanel.add(existingData);
 		mainHorizontalPanel.add(lastUpdatedLabel);
 
 		RootPanel.get("mainDiv").add(mainHorizontalPanel);
@@ -55,12 +56,12 @@ public class Salvation implements EntryPoint {
 			}
 		});
 
-//		existingData.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				RootPanel.get("mainDiv").clear();
-//				editDiploma();
-//			}
-//		});
+		// existingData.addClickHandler(new ClickHandler() {
+		// public void onClick(ClickEvent event) {
+		// RootPanel.get("mainDiv").clear();
+		// editDiploma();
+		// }
+		// });
 
 	}
 
@@ -107,10 +108,12 @@ public class Salvation implements EntryPoint {
 	}
 
 	private void addPerson() {
-		SC.say("Pick dates in this range:" + FM.getStartDate().getDate() + "/" + (FM.getStartDate().getMonth()+1)
-				+ "/20" + (FM.getStartDate().getYear()-100) + " : " + FM.getEndDate().getDate() + "/" 
-				+ (FM.getEndDate().getMonth()+1)
-				+ "/20" + (FM.getEndDate().getYear()-100));
+		SC.say("Pick dates in this range:" + FM.getStartDate().getDate() + "/"
+				+ (FM.getStartDate().getMonth() + 1) + "/20"
+				+ (FM.getStartDate().getYear() - 100) + " : "
+				+ FM.getEndDate().getDate() + "/"
+				+ (FM.getEndDate().getMonth() + 1) + "/20"
+				+ (FM.getEndDate().getYear() - 100));
 		final ArrayList<Date> dates = new ArrayList<Date>();
 
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
@@ -225,8 +228,8 @@ public class Salvation implements EntryPoint {
 		final ComboBoxItem typeComboBox = new ComboBoxItem();
 		typeComboBox.setTitle("Software Type");
 		typeComboBox.setType("comboBox");
-		typeComboBox.setValueMap("Game", "Media", "Plug-in/Driver", "Web Site/App",
-				"Other");
+		typeComboBox.setValueMap("Game/Media", "Plug-in/Driver",
+				"Web Site/App", "Other");
 		typeComboBox.setDisabled(true);
 
 		specialtiesComboBox.addChangedHandler(new ChangedHandler() {
@@ -243,11 +246,22 @@ public class Salvation implements EntryPoint {
 		});
 
 		Button submitButton = new Button("Submit");
+		submitButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				FM.getDiploma(projectNameTextBox, diplomantsNameTextBox,
+						diplomaLeadersListBox, reviewersListBox,
+						specialtiesComboBox, typeComboBox);
+				FM.generateDefences();
+				showDefences();
+			}
+		});
+
 		Button oneMoreButton = new Button("One More");
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				// getDiploma(projectNameTextBox,diplomantsNameTextBox,diplomaLeadersListBox,
-				// reviewersListBox,specialtiesComboBox, typeComboBox);
+				FM.getDiploma(projectNameTextBox, diplomantsNameTextBox,
+						diplomaLeadersListBox, reviewersListBox,
+						specialtiesComboBox, typeComboBox);
 				RootPanel.get("mainDiv").clear();
 				addDiploma();
 			}
@@ -279,6 +293,56 @@ public class Salvation implements EntryPoint {
 
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
 	}
+
+//	protected void showDefences() {
+//		Button showSoftwareDefences = new Button("Show Software");
+//		showSoftwareDefences.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				show
+//			}
+//		});
+//
+//		Button showHardwareDefences = new Button("Show Hardware");
+//		showSoftwareDefences.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				RootPanel.get("mainDiv").clear();
+//				showDefence();
+//			}
+//		});
+//
+//		Button showCommunicationsDefences = new Button("Show Communications");
+//		showSoftwareDefences.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				RootPanel.get("mainDiv").clear();
+//				showDefence();
+//			}
+//		});
+//
+//	}
+
+	protected void showDefences() {
+		Canvas canvas = new Canvas();  
+		  
+        final ListGrid DiplomaGrid = new ListGrid();  
+        DiplomaGrid.setWidth(500);  
+        DiplomaGrid.setHeight(224);  
+        DiplomaGrid.setShowAllRecords(true);  
+        DiplomaGrid.setCanEdit(true);  
+        DiplomaGrid.setEditEvent(ListGridEditEvent.CLICK);  
+        DiplomaGrid.setModalEditing(true);  
+  
+        ListGridField nameField = new ListGridField("name", "Project Name");  
+        ListGridField diplomantsField = new ListGridField("diplomants", "Diplomants");  
+        ListGridField leaderField = new ListGridField("leader", "Leader");   
+        ListGridField reviewerField = new ListGridField("reviewer", "Reviewer");  
+        ListGridField typeField = new ListGridField("type", "Type"); 
+        ListGridField dateField = new ListGridField("date", "Date");
+        DiplomaGrid.setFields(new ListGridField[] {nameField, diplomantsField, leaderField,reviewerField, dateField});  
+        DiplomaGrid.setData(new DiplomaData(FM).getRecords());  
+        canvas.addChild(DiplomaGrid);  
+        canvas.draw();  
+    }  
+		
 
 	private void editDiploma() {
 
