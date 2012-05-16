@@ -336,12 +336,7 @@ public class FunctionalityManager {
 				}
 				works.removeAll(defence.getDiplomaWorks());
 
-				if (defence.getDiplomaWorks().size() >= 7
-						&& defence.getDiplomaWorks().size() <= 9) {
-					jury.add(defence.getDiplomaWorks()
-							.get(defence.getDiplomaWorks().size() - 1)
-							.getReviewer());
-				} else if (defence.getDiplomaWorks().size() > 9) {
+				if (defence.getDiplomaWorks().size() > 7) {
 					while (defence.getDiplomaWorks().size() > 8) {
 						works.add(defence.getDiplomaWorks().get(
 								defence.getDiplomaWorks().size() - 1));
@@ -466,7 +461,7 @@ public class FunctionalityManager {
 				}
 			}
 		} else {
-			defence.setDay(jury.get(0).getAvailableDates().get(0));
+			defence.setDay(startDate);
 		}
 
 		defence.setJury(jury);

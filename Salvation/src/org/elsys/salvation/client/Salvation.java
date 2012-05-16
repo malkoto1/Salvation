@@ -52,7 +52,8 @@ public class Salvation implements EntryPoint {
 		newData.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
-				dateRange();
+				//dateRange();
+				addPerson();
 			}
 		});
 
@@ -73,16 +74,18 @@ public class Salvation implements EntryPoint {
 		dateRangeItem.setAllowRelativeDates(true);
 
 		final DateRange dateRange = new DateRange();
-		dateRange.setRelativeStartDate(RelativeDate.YESTERDAY);
-		dateRange.setRelativeEndDate(RelativeDate.YESTERDAY);
+//		dateRange.setRelativeStartDate(RelativeDate.YESTERDAY);
+//		dateRange.setRelativeEndDate(RelativeDate.YESTERDAY);
 		dateRangeItem.setValue(dateRange);
 
 		final Button nextButton = new Button("Next");
 
 		nextButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				FM.setStartDate(dateRange.getStartDate());
-				FM.setEndDate(dateRange.getEndDate());
+//				FM.setStartDate(new Date(dateRange.getStartDate().getDate(),
+//						dateRange.getStartDate().getMonth(),dateRange.getStartDate().getYear()));
+//				FM.setEndDate(new Date(dateRange.getEndDate().getDate(),
+//						dateRange.getEndDate().getMonth(),dateRange.getEndDate().getYear()));
 				RootPanel.get("mainDiv").clear();
 				addPerson();
 			}
@@ -108,12 +111,12 @@ public class Salvation implements EntryPoint {
 	}
 
 	private void addPerson() {
-		SC.say("Pick dates in this range:" + FM.getStartDate().getDate() + "/"
-				+ (FM.getStartDate().getMonth() + 1) + "/20"
-				+ (FM.getStartDate().getYear() - 100) + " : "
-				+ FM.getEndDate().getDate() + "/"
-				+ (FM.getEndDate().getMonth() + 1) + "/20"
-				+ (FM.getEndDate().getYear() - 100));
+//		SC.say("Pick dates in this range:" + FM.getStartDate().getDate() + "/"
+//				+ (FM.getStartDate().getMonth() + 1) + "/20"
+//				+ (FM.getStartDate().getYear() - 100) + " : "
+//				+ FM.getEndDate().getDate() + "/"
+//				+ (FM.getEndDate().getMonth() + 1) + "/20"
+//				+ (FM.getEndDate().getYear() - 100));
 		final ArrayList<Date> dates = new ArrayList<Date>();
 
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
@@ -252,6 +255,7 @@ public class Salvation implements EntryPoint {
 						diplomaLeadersListBox, reviewersListBox,
 						specialtiesComboBox, typeComboBox);
 				FM.generateDefences();
+				RootPanel.get("mainDiv").clear();
 				showDefences();
 			}
 		});
@@ -330,6 +334,8 @@ public class Salvation implements EntryPoint {
         DiplomaGrid.setCanEdit(true);  
         DiplomaGrid.setEditEvent(ListGridEditEvent.CLICK);  
         DiplomaGrid.setModalEditing(true);  
+        
+        DiplomaData dd= new DiplomaData(FM);
   
         ListGridField nameField = new ListGridField("name", "Project Name");  
         ListGridField diplomantsField = new ListGridField("diplomants", "Diplomants");  
@@ -338,7 +344,7 @@ public class Salvation implements EntryPoint {
         ListGridField typeField = new ListGridField("type", "Type"); 
         ListGridField dateField = new ListGridField("date", "Date");
         DiplomaGrid.setFields(new ListGridField[] {nameField, diplomantsField, leaderField,reviewerField, dateField});  
-        DiplomaGrid.setData(new DiplomaData(FM).getRecords());  
+        DiplomaGrid.setData(dd.getRecords());  
         canvas.addChild(DiplomaGrid);  
         canvas.draw();  
     }  

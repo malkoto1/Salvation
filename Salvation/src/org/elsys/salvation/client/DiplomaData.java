@@ -7,6 +7,7 @@ public class DiplomaData {
   
     private DiplomaRecord[] records; 
     private FunctionalityManager FM;
+    private int size;
     
     public DiplomaData(FunctionalityManager fm){
     	this.FM = fm;
@@ -20,13 +21,13 @@ public class DiplomaData {
     }  
   
     public DiplomaRecord[] getNewRecords() {
-    	int size=0;
+    	size=0;
     	
-    	count(size,FM.getHardDefences());
-    	count(size,FM.getNetDefences());
-    	count(size,FM.getSoftDefences());
+    	count(FM.getHardDefences());
+    	count(FM.getNetDefences());
+    	count(FM.getSoftDefences());
     	
-        DiplomaRecord[] records = new DiplomaRecord[size];
+    	records = new DiplomaRecord[size];
         int count = 0;
         
         for(int i=0; i<FM.getHardDefences().size(); i++){
@@ -68,10 +69,10 @@ public class DiplomaData {
         	}
         }
     	
-    	return new DiplomaRecord[]{};  
+    	return records;  
     }
     
-    public void count(int size, ArrayList<Defence> defences){
+    public void count(ArrayList<Defence> defences){
     	for(int i = 0; i<defences.size();i++){
     		for(int k = 0; k<defences.get(i).getDiplomaWorks().size(); k++){
     			size++;
