@@ -2,19 +2,19 @@ package org.elsys.salvation.client;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.smartgwt.client.data.DateRange;
-import com.smartgwt.client.data.RelativeDate;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.util.SC;
@@ -35,7 +35,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class Salvation implements EntryPoint {
 
-	public FunctionalityManager FM = new FunctionalityManager();
+	private FunctionalityManager FM = new FunctionalityManager();
+	private DefenceServiceAsync defenceSvc = GWT.create(DefenceService.class);
 
 	public void onModuleLoad() {
 
@@ -190,6 +191,19 @@ public class Salvation implements EntryPoint {
 	}
 
 	private void addDiploma() {
+		
+		final AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+			public void onFailure(Throwable caught) {
+				
+		    }
+
+			@Override
+			public void onSuccess(Void result) {
+				//SC.say("Submited");
+				RootPanel.get("mainDiv").clear();
+				showDefences();
+			}
+		};
 
 		HorizontalPanel buttonHorizontalPanel = new HorizontalPanel();
 		HorizontalPanel listsHorizontalPanel = new HorizontalPanel();
@@ -255,8 +269,7 @@ public class Salvation implements EntryPoint {
 						diplomaLeadersListBox, reviewersListBox,
 						specialtiesComboBox, typeComboBox);
 				FM.generateDefences();
-				RootPanel.get("mainDiv").clear();
-				showDefences();
+				defenceSvc.saveDefences(FM,callback);
 			}
 		});
 
@@ -298,35 +311,76 @@ public class Salvation implements EntryPoint {
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
 	}
 
-//	protected void showDefences() {
-//		Button showSoftwareDefences = new Button("Show Software");
-//		showSoftwareDefences.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				show
-//			}
-//		});
-//
-//		Button showHardwareDefences = new Button("Show Hardware");
-//		showSoftwareDefences.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				RootPanel.get("mainDiv").clear();
-//				showDefence();
-//			}
-//		});
-//
-//		Button showCommunicationsDefences = new Button("Show Communications");
-//		showSoftwareDefences.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				RootPanel.get("mainDiv").clear();
-//				showDefence();
-//			}
-//		});
-//
-//	}
-
 	protected void showDefences() {
-		Canvas canvas = new Canvas();  
-		  
+		
+		Button showSoftwareDefences = new Button("Show Software");
+		showSoftwareDefences.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				RootPanel.get("mainDiv").clear();
+				showDefence();
+			}
+		});
+
+		Button showHardwareDefences = new Button("Show Hardware");
+		showHardwareDefences.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				RootPanel.get("mainDiv").clear();
+				showDefence();
+			}
+		});
+
+		Button showCommunicationsDefences = new Button("Show Communications");
+		showCommunicationsDefences.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				RootPanel.get("mainDiv").clear();
+				showDefence();
+			}
+		});
+		
+		RootPanel.get("mainDiv").add(showSoftwareDefences);
+		RootPanel.get("mainDiv").add(showCommunicationsDefences);
+		RootPanel.get("mainDiv").add(showHardwareDefences);
+
+	}
+
+	protected void showDefence() {  
+		final FunctionalityManager funcM = new FunctionalityManager();
+		final AsyncCallback<FunctionalityManager> callback1 = new AsyncCallback<FunctionalityManager>() {
+			public void onFailure(Throwable caught) {
+				
+		    }
+
+			@Override
+			public void onSuccess(FunctionalityManager result) {
+				funcM.setHardDefences(result.getHardDefences());
+				
+			}
+		};
+		final AsyncCallback<FunctionalityManager> callback2 = new AsyncCallback<FunctionalityManager>() {
+			public void onFailure(Throwable caught) {
+				
+		    }
+
+			@Override
+			public void onSuccess(FunctionalityManager result) {
+				funcM.setNetDefences(result.getNetDefences());
+				
+			}
+		};
+		final AsyncCallback<FunctionalityManager> callback3 = new AsyncCallback<FunctionalityManager>() {
+			public void onFailure(Throwable caught) {
+				
+		    }
+
+			@Override
+			public void onSuccess(FunctionalityManager result) {
+				funcM.setSoftDefences(result.getSoftDefences());
+				
+			}
+		};
+		defenceSvc.getHardDefences(funcM, callback1);  
+		defenceSvc.getNetDefences(funcM, callback2);  
+		defenceSvc.getSoftDefences(funcM, callback3);  
         final ListGrid DiplomaGrid = new ListGrid();  
         DiplomaGrid.setWidth(500);  
         DiplomaGrid.setHeight(224);  
@@ -335,7 +389,7 @@ public class Salvation implements EntryPoint {
         DiplomaGrid.setEditEvent(ListGridEditEvent.CLICK);  
         DiplomaGrid.setModalEditing(true);  
         
-        DiplomaData dd= new DiplomaData(FM);
+        DiplomaData dd= new DiplomaData(funcM);
   
         ListGridField nameField = new ListGridField("name", "Project Name");  
         ListGridField diplomantsField = new ListGridField("diplomants", "Diplomants");  
@@ -343,10 +397,10 @@ public class Salvation implements EntryPoint {
         ListGridField reviewerField = new ListGridField("reviewer", "Reviewer");  
         ListGridField typeField = new ListGridField("type", "Type"); 
         ListGridField dateField = new ListGridField("date", "Date");
-        DiplomaGrid.setFields(new ListGridField[] {nameField, diplomantsField, leaderField,reviewerField, dateField});  
-        DiplomaGrid.setData(dd.getRecords());  
-        canvas.addChild(DiplomaGrid);  
-        canvas.draw();  
+        DiplomaGrid.setFields(new ListGridField[] {nameField, diplomantsField, leaderField,reviewerField, typeField, dateField});  
+        DiplomaGrid.setData(dd.getRecords());
+        
+        RootPanel.get("mainDiv").add(DiplomaGrid);
     }  
 		
 

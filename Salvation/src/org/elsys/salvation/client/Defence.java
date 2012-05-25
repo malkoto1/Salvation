@@ -1,9 +1,10 @@
 package org.elsys.salvation.client;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Defence {
+public class Defence implements Serializable{
 	private ArrayList<DiplomaWork> diplomaWorks;
 	private Date day ;
 	private ArrayList<Person> jury;	

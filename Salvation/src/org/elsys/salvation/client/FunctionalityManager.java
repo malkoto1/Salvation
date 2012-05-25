@@ -1,5 +1,6 @@
 package org.elsys.salvation.client;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -9,15 +10,15 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 
-public class FunctionalityManager {
+public class FunctionalityManager implements Serializable {
 
 	private Date startDate;
 	private Date endDate;
-	private ArrayList<Person> Leaders;
-	private ArrayList<Person> Reviewers;
-	private ArrayList<DiplomaWork> SoftwareWorks;
-	private ArrayList<DiplomaWork> HardwareWorks;
-	private ArrayList<DiplomaWork> NetWorks;
+	private ArrayList<Person> leaders;
+	private ArrayList<Person> reviewers;
+	private ArrayList<DiplomaWork> softwareWorks;
+	private ArrayList<DiplomaWork> hardwareWorks;
+	private ArrayList<DiplomaWork> netWorks;
 	private ArrayList<Defence> netDefences;
 	private ArrayList<Defence> hardDefences;
 	private ArrayList<Defence> softDefences;
@@ -26,11 +27,11 @@ public class FunctionalityManager {
 		super();
 		startDate = new Date();
 		endDate = new Date();
-		Leaders = new ArrayList<Person>();
-		Reviewers = new ArrayList<Person>();
-		SoftwareWorks = new ArrayList<DiplomaWork>();
-		HardwareWorks = new ArrayList<DiplomaWork>();
-		NetWorks = new ArrayList<DiplomaWork>();
+		leaders = new ArrayList<Person>();
+		reviewers = new ArrayList<Person>();
+		softwareWorks = new ArrayList<DiplomaWork>();
+		hardwareWorks = new ArrayList<DiplomaWork>();
+		netWorks = new ArrayList<DiplomaWork>();
 		netDefences = new ArrayList<Defence>();
 		hardDefences = new ArrayList<Defence>();
 		softDefences = new ArrayList<Defence>();
@@ -53,43 +54,43 @@ public class FunctionalityManager {
 	}
 
 	public ArrayList<Person> getLeaders() {
-		return Leaders;
+		return leaders;
 	}
 
 	public void setLeaders(ArrayList<Person> leaders) {
-		Leaders = leaders;
+		this.leaders = leaders;
 	}
 
 	public ArrayList<Person> getReviewers() {
-		return Reviewers;
+		return reviewers;
 	}
 
 	public void setReviewers(ArrayList<Person> reviewers) {
-		Reviewers = reviewers;
+		this.reviewers = reviewers;
 	}
 
 	public ArrayList<DiplomaWork> getSoftwareWorks() {
-		return SoftwareWorks;
+		return softwareWorks;
 	}
 
 	public void setSoftwareWorks(ArrayList<DiplomaWork> softwareWorks) {
-		SoftwareWorks = softwareWorks;
+		this.softwareWorks = softwareWorks;
 	}
 
 	public ArrayList<DiplomaWork> getHardwareWorks() {
-		return HardwareWorks;
+		return hardwareWorks;
 	}
 
 	public void setHardwareWorks(ArrayList<DiplomaWork> hardwareWorks) {
-		HardwareWorks = hardwareWorks;
+		this.hardwareWorks = hardwareWorks;
 	}
 
 	public ArrayList<DiplomaWork> getNetWorks() {
-		return NetWorks;
+		return netWorks;
 	}
 
 	public void setNetWorks(ArrayList<DiplomaWork> netWorks) {
-		NetWorks = netWorks;
+		this.netWorks = netWorks;
 	}
 
 	public ArrayList<Defence> getNetDefences() {
@@ -119,14 +120,14 @@ public class FunctionalityManager {
 	public void getPerson(ArrayList<Date> set, TextItem box, ListBox listBox) {
 		if (listBox.getSelectedIndex() == 0) {
 			Person person = new Person(box.getValueAsString(), set);
-			Leaders.add(person);
+			leaders.add(person);
 		} else if (listBox.getSelectedIndex() == 1) {
 			Person person = new Person(box.getValueAsString(), set);
-			Reviewers.add(person);
+			reviewers.add(person);
 		} else if (listBox.getSelectedIndex() == 2) {
 			Person person = new Person(box.getValueAsString(), set);
-			Leaders.add(person);
-			Reviewers.add(person);
+			leaders.add(person);
+			reviewers.add(person);
 		}
 	}
 
@@ -137,50 +138,50 @@ public class FunctionalityManager {
 		Person leader = new Person();
 		Person reviewer = new Person();
 
-		for (int i = 0; i < Leaders.size(); i++) {
-			if (Leaders
+		for (int i = 0; i < leaders.size(); i++) {
+			if (leaders
 					.get(i)
 					.getName()
 					.equals(diplomaLeader.getValue(diplomaLeader
 							.getSelectedIndex()))) {
-				leader = Leaders.get(i);
+				leader = leaders.get(i);
 			}
 		}
 
-		for (int k = 0; k < Reviewers.size(); k++) {
-			if (Reviewers
+		for (int k = 0; k < reviewers.size(); k++) {
+			if (reviewers
 					.get(k)
 					.getName()
 					.equals(diplomaReviewer.getValue(diplomaReviewer
 							.getSelectedIndex()))) {
 
 			}
-			reviewer = Reviewers.get(k);
+			reviewer = reviewers.get(k);
 		}
 
 		if (specialtie.getValueAsString().equalsIgnoreCase("Software")
-				&& !SoftwareWorks.contains(new DiplomaWork(projectName
+				&& !softwareWorks.contains(new DiplomaWork(projectName
 						.getValueAsString(), diplomants.getValueAsString(),
 						leader, reviewer, type.getValueAsString()))) {
-			SoftwareWorks.add(new DiplomaWork(projectName.getValueAsString(),
+			softwareWorks.add(new DiplomaWork(projectName.getValueAsString(),
 					diplomants.getValueAsString(), leader, reviewer, type
 							.getValueAsString()));
 
 		} else if (specialtie.getValueAsString().equalsIgnoreCase("Hardware")
-				&& !HardwareWorks.contains(new DiplomaWork(projectName
+				&& !hardwareWorks.contains(new DiplomaWork(projectName
 						.getValueAsString(), diplomants.getValueAsString(),
 						leader, reviewer, "Hardware"))) {
-			HardwareWorks
+			hardwareWorks
 					.add(new DiplomaWork(projectName.getValueAsString(),
 							diplomants.getValueAsString(), leader, reviewer,
 							"Hardware"));
 
 		} else if (specialtie.getValueAsString().equalsIgnoreCase(
 				"Communication")
-				&& !NetWorks.contains(new DiplomaWork(projectName
+				&& !netWorks.contains(new DiplomaWork(projectName
 						.getValueAsString(), diplomants.getValueAsString(),
 						leader, reviewer, "Communication"))) {
-			NetWorks.add(new DiplomaWork(projectName.getValueAsString(),
+			netWorks.add(new DiplomaWork(projectName.getValueAsString(),
 					diplomants.getValueAsString(), leader, reviewer,
 					"Communication"));
 		}
@@ -191,15 +192,15 @@ public class FunctionalityManager {
 		HashSet<Date> takenDates = new HashSet<Date>();
 		HashSet<Date> softTakenDates = new HashSet<Date>();
 
-		while (HardwareWorks.size() > 0) {
-			hardDefences.add(defaultGeneration(HardwareWorks, takenDates));
+		while (hardwareWorks.size() > 0) {
+			hardDefences.add(defaultGeneration(hardwareWorks, takenDates));
 		}
 
-		while (NetWorks.size() > 0) {
-			netDefences.add(defaultGeneration(NetWorks, takenDates));
+		while (netWorks.size() > 0) {
+			netDefences.add(defaultGeneration(netWorks, takenDates));
 		}
 
-		if(SoftwareWorks.size()>0){
+		if(softwareWorks.size()>0){
 			if(softwareWorksContains("Game/Media") == 1){
 				softDefences.add(softwareDefenceTypeGeneration("Game/Media",
 						softTakenDates));
@@ -216,13 +217,10 @@ public class FunctionalityManager {
 				softDefences
 				.add(softwareDefenceTypeGeneration("Other", softTakenDates));
 			}
-			if(SoftwareWorks.size()>0){
+			if(softwareWorks.size()>0){
 				organizeLastSoftwareWorks(softDefences, softTakenDates);
 			}
 		}
-		
-		
-
 	}
 
 	public Defence defaultGeneration(ArrayList<DiplomaWork> works,
@@ -396,14 +394,14 @@ public class FunctionalityManager {
 		ArrayList<Person> jury = new ArrayList<Person>();
 
 		if (type.equals("All")) {
-			for (int i = 0; i < SoftwareWorks.size() && defence.getDiplomaWorks().size()<9; i++) {
-				defence.addDiploma(SoftwareWorks.get(i));
+			for (int i = 0; i < softwareWorks.size() && defence.getDiplomaWorks().size()<9; i++) {
+				defence.addDiploma(softwareWorks.get(i));
 			}
 		} else {
 			int size = 0;
-			for (int i = 0; i < SoftwareWorks.size(); i++) {
-				if (SoftwareWorks.get(i).getType().equals(type)) {
-					defence.addDiploma(SoftwareWorks.get(i));
+			for (int i = 0; i < softwareWorks.size(); i++) {
+				if (softwareWorks.get(i).getType().equals(type)) {
+					defence.addDiploma(softwareWorks.get(i));
 					size++;
 					if (size == 8) {
 						break;
@@ -412,7 +410,7 @@ public class FunctionalityManager {
 			}
 		}
 
-		SoftwareWorks.removeAll(defence.getDiplomaWorks());
+		softwareWorks.removeAll(defence.getDiplomaWorks());
 
 		for (int i = 0; i < defence.getDiplomaWorks().size(); i++) {
 			if (!jury.contains(defence.getDiplomaWorks().get(i).getLeader())) {
@@ -471,14 +469,14 @@ public class FunctionalityManager {
 
 	public void organizeLastSoftwareWorks(ArrayList<Defence> defences,
 			HashSet<Date> takenDates) {
-		if (SoftwareWorks.size() >= 5 && SoftwareWorks.size() <= 9) {
+		if (softwareWorks.size() >= 5 && softwareWorks.size() <= 9) {
 			defences.add(softwareDefenceTypeGeneration("All", takenDates));
-		} else if (SoftwareWorks.size() <= 4 && SoftwareWorks.size()>0) {
-			for (int i = 0; i < SoftwareWorks.size(); i++) {
-				defences.get(i).addDiploma(SoftwareWorks.get(i));
+		} else if (softwareWorks.size() <= 4 && softwareWorks.size()>0) {
+			for (int i = 0; i < softwareWorks.size(); i++) {
+				defences.get(i).addDiploma(softwareWorks.get(i));
 			}
-			SoftwareWorks.clear();
-		} else if(SoftwareWorks.size() > 9){
+			softwareWorks.clear();
+		} else if(softwareWorks.size() > 9){
 			defences.add(softwareDefenceTypeGeneration("All", takenDates));
 			organizeLastSoftwareWorks(defences, takenDates);
 		}
@@ -486,8 +484,8 @@ public class FunctionalityManager {
 	
 	public int softwareWorksContains(String type){
 		int contains = 0;
-		for(int i =0; i<SoftwareWorks.size(); i++){
-			if(SoftwareWorks.get(i).getType().equals(type)){
+		for(int i =0; i<softwareWorks.size(); i++){
+			if(softwareWorks.get(i).getType().equals(type)){
 				contains = 1;
 				break;
 			}
@@ -496,11 +494,11 @@ public class FunctionalityManager {
 	}
 	
 	public void clearAllData() {
-		Leaders.clear();
-		Reviewers.clear();
-		SoftwareWorks.clear();
-		HardwareWorks.clear();
-		NetWorks.clear();
+		leaders.clear();
+		reviewers.clear();
+		softwareWorks.clear();
+		hardwareWorks.clear();
+		netWorks.clear();
 	}
 
 }

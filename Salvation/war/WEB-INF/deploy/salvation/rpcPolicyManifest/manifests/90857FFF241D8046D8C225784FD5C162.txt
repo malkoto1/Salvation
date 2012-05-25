@@ -1,0 +1,2 @@
+serviceClass: org.elsys.salvation.client.DefenceService
+path: 6A6130EB5E6A9B4C982DAF59539C1FDB.gwt.rpc
