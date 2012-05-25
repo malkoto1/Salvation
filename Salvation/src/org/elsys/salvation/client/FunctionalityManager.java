@@ -133,7 +133,7 @@ public class FunctionalityManager implements Serializable {
 
 	public void getDiploma(TextItem projectName, TextItem diplomants,
 			ListBox diplomaLeader, ListBox diplomaReviewer,
-			ComboBoxItem specialtie, ComboBoxItem type) {
+			ListBox specialtiesListBox, ListBox typeListBox) {
 
 		Person leader = new Person();
 		Person reviewer = new Person();
@@ -159,15 +159,15 @@ public class FunctionalityManager implements Serializable {
 			reviewer = reviewers.get(k);
 		}
 
-		if (specialtie.getValueAsString().equalsIgnoreCase("Software")
+		if (specialtiesListBox.getValue(specialtiesListBox.getSelectedIndex()).equalsIgnoreCase("Software")
 				&& !softwareWorks.contains(new DiplomaWork(projectName
 						.getValueAsString(), diplomants.getValueAsString(),
-						leader, reviewer, type.getValueAsString()))) {
+						leader, reviewer, typeListBox.getValue(typeListBox.getSelectedIndex())))) {
 			softwareWorks.add(new DiplomaWork(projectName.getValueAsString(),
-					diplomants.getValueAsString(), leader, reviewer, type
-							.getValueAsString()));
+					diplomants.getValueAsString(), leader, reviewer, typeListBox
+							.getValue(typeListBox.getSelectedIndex())));
 
-		} else if (specialtie.getValueAsString().equalsIgnoreCase("Hardware")
+		} else if (specialtiesListBox.getValue(specialtiesListBox.getSelectedIndex()).equalsIgnoreCase("Hardware")
 				&& !hardwareWorks.contains(new DiplomaWork(projectName
 						.getValueAsString(), diplomants.getValueAsString(),
 						leader, reviewer, "Hardware"))) {
@@ -176,7 +176,7 @@ public class FunctionalityManager implements Serializable {
 							diplomants.getValueAsString(), leader, reviewer,
 							"Hardware"));
 
-		} else if (specialtie.getValueAsString().equalsIgnoreCase(
+		} else if (specialtiesListBox.getValue(specialtiesListBox.getSelectedIndex()).equalsIgnoreCase(
 				"Communication")
 				&& !netWorks.contains(new DiplomaWork(projectName
 						.getValueAsString(), diplomants.getValueAsString(),

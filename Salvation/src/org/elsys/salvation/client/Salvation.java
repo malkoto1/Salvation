@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -199,7 +201,7 @@ public class Salvation implements EntryPoint {
 
 			@Override
 			public void onSuccess(Void result) {
-				//SC.say("Submited");
+				//SC.say("Submitted");
 				RootPanel.get("mainDiv").clear();
 				showDefences();
 			}
@@ -207,6 +209,7 @@ public class Salvation implements EntryPoint {
 
 		HorizontalPanel buttonHorizontalPanel = new HorizontalPanel();
 		HorizontalPanel listsHorizontalPanel = new HorizontalPanel();
+		HorizontalPanel typeListsHorizontalPanel = new HorizontalPanel();
 		VerticalPanel mainVerticalPanel = new VerticalPanel();
 
 		final TextItem projectNameTextBox = new TextItem();
@@ -234,30 +237,28 @@ public class Salvation implements EntryPoint {
 
 		}
 
-		DynamicForm specialtieForm = new DynamicForm();
+		final ListBox specialtiesListBox = new ListBox();
+		specialtiesListBox.setTitle("Specialties");
+		specialtiesListBox.addItem("Hardware");
+		specialtiesListBox.addItem("Software");
+		specialtiesListBox.addItem("Communication");
+		
+		final ListBox typeListBox = new ListBox();
+		typeListBox.setTitle("Software Type");
+		typeListBox.addItem("Game/Media");
+		typeListBox.addItem("Plug-in/Driver");
+		typeListBox.addItem("Web Site/App");
+		typeListBox.addItem("Other");
+		typeListBox.setEnabled(false);
 
-		final ComboBoxItem specialtiesComboBox = new ComboBoxItem();
-		specialtiesComboBox.setTitle("Specialties");
-		specialtiesComboBox.setType("comboBox");
-		specialtiesComboBox
-				.setValueMap("Software", "Hardware", "Communication");
-
-		final ComboBoxItem typeComboBox = new ComboBoxItem();
-		typeComboBox.setTitle("Software Type");
-		typeComboBox.setType("comboBox");
-		typeComboBox.setValueMap("Game/Media", "Plug-in/Driver",
-				"Web Site/App", "Other");
-		typeComboBox.setDisabled(true);
-
-		specialtiesComboBox.addChangedHandler(new ChangedHandler() {
-
+		specialtiesListBox.addChangeHandler(new ChangeHandler() {
 			@Override
-			public void onChanged(
-					com.smartgwt.client.widgets.form.fields.events.ChangedEvent event) {
-				if (specialtiesComboBox.getValueAsString().equals("Software")) {
-					typeComboBox.setDisabled(false);
+			public void onChange(ChangeEvent event) {
+				if (specialtiesListBox.getValue(specialtiesListBox.getSelectedIndex())
+						.equals("Software")) {
+					typeListBox.setEnabled(true);
 				} else {
-					typeComboBox.setDisabled(true);
+					typeListBox.setEnabled(false);
 				}
 			}
 		});
@@ -267,7 +268,7 @@ public class Salvation implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				FM.getDiploma(projectNameTextBox, diplomantsNameTextBox,
 						diplomaLeadersListBox, reviewersListBox,
-						specialtiesComboBox, typeComboBox);
+						specialtiesListBox, typeListBox);
 				FM.generateDefences();
 				defenceSvc.saveDefences(FM,callback);
 			}
@@ -278,7 +279,7 @@ public class Salvation implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				FM.getDiploma(projectNameTextBox, diplomantsNameTextBox,
 						diplomaLeadersListBox, reviewersListBox,
-						specialtiesComboBox, typeComboBox);
+						specialtiesListBox, typeListBox);
 				RootPanel.get("mainDiv").clear();
 				addDiploma();
 			}
@@ -292,11 +293,10 @@ public class Salvation implements EntryPoint {
 			}
 		});
 
-		specialtieForm.setFields(specialtiesComboBox, typeComboBox);
+
 
 		mainVerticalPanel.add(projectNameForm);
 		mainVerticalPanel.add(diplomantsNameForm);
-		mainVerticalPanel.add(specialtieForm);
 
 		buttonHorizontalPanel.add(back);
 		buttonHorizontalPanel.add(oneMoreButton);
@@ -304,8 +304,12 @@ public class Salvation implements EntryPoint {
 
 		listsHorizontalPanel.add(diplomaLeadersListBox);
 		listsHorizontalPanel.add(reviewersListBox);
+		
+		typeListsHorizontalPanel.add(specialtiesListBox);
+		typeListsHorizontalPanel.add(typeListBox);
 
 		mainVerticalPanel.add(listsHorizontalPanel);
+		mainVerticalPanel.add(typeListsHorizontalPanel);
 		mainVerticalPanel.add(buttonHorizontalPanel);
 
 		RootPanel.get("mainDiv").add(mainVerticalPanel);
