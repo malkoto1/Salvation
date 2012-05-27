@@ -248,6 +248,36 @@ public class FunctionalityTesting {
 		assertEquals(netWorks, FM.getNetWorks());
 
 	}
+	
+	@Test
+	public void setHardDefencesTest(){
+		FunctionalityManager fm = new FunctionalityManager();
+		
+		ArrayList<Defence> defences = new ArrayList<Defence>();
+		
+		defences.add(new Defence());
+		defences.add(new Defence());
+		defences.add(new Defence());
+		
+		fm.setHardDefences(defences);
+		fm.setNetDefences(defences);
+		fm.setSoftDefences(defences);
+		
+		assertEquals(defences,fm.getHardDefences());
+		assertEquals(defences,fm.getNetDefences());
+		assertEquals(defences,fm.getSoftDefences());
+	}
+	
+	@Test
+	public void setSoftDefencesTest(){
+		FunctionalityManager fm = new FunctionalityManager();
+	}
+	
+	@Test
+	public void setNetDefencesTest(){
+		FunctionalityManager fm = new FunctionalityManager();
+		
+	}
 
 	@Test
 	public void FMClearAll() {
@@ -366,39 +396,6 @@ public class FunctionalityTesting {
 		works.add(new DiplomaWork("name", "diplomants", leader1, reviewer1,"type"));
 		works.add(new DiplomaWork("name", "diplomants", leader1, reviewer1,"type"));
 		works.add(new DiplomaWork("name", "diplomants", leader2, reviewer3,"type"));
-
-		FM.setHardwareWorks(works);
-
-		defence = FM.defaultGeneration(FM.getHardwareWorks(), dateSet);
-
-		assertEquals(8, defence.getDiplomaWorks().size());
-		assertEquals(2, FM.getHardwareWorks().size());
-	}
-
-	@Test
-	public void moreThan9Generation3() {
-		FunctionalityManager FM = new FunctionalityManager();
-		HashSet<Date> dateSet = new HashSet<Date>();
-		ArrayList<DiplomaWork> works = new ArrayList<DiplomaWork>();
-		Defence defence = new Defence();
-
-		Person leader1 = new Person("Leader1", dateList());
-		Person leader2 = new Person("Leader2", dateList());
-		Person leader3 = new Person("Leader3", dateList());
-		Person reviewer1 = new Person("Reviewer1", dateList());
-		Person reviewer2 = new Person("Reviewer2", dateList());
-		Person reviewer3 = new Person("Reviewer3", dateList());
-
-		works.add(new DiplomaWork("name", "diplomants", leader1, reviewer1,"type"));
-		works.add(new DiplomaWork("name", "diplomants", leader2, reviewer2,"type"));
-		works.add(new DiplomaWork("name", "diplomants", leader1, reviewer2,"type"));
-		works.add(new DiplomaWork("name", "diplomants", leader1, reviewer3,"type"));
-		works.add(new DiplomaWork("name", "diplomants", leader1, reviewer1,"type"));
-		works.add(new DiplomaWork("name", "diplomants", leader2, reviewer3,"type"));
-		works.add(new DiplomaWork("name", "diplomants", leader3, reviewer1,"type"));
-		works.add(new DiplomaWork("name", "diplomants", leader3, reviewer1,"type"));
-		works.add(new DiplomaWork("name", "diplomants", leader3, reviewer1,"type"));
-		works.add(new DiplomaWork("name", "diplomants", leader3, reviewer3,"type"));
 
 		FM.setHardwareWorks(works);
 
@@ -689,7 +686,90 @@ public class FunctionalityTesting {
 		assertEquals(7,FM.getSoftDefences().size());
 		
 	}
+	
+	@Test
+	public void addPersonToJuryTest1(){
+		FunctionalityManager fm = new FunctionalityManager();
+		Person leader = new Person("Leader", dateList());
+		Person reviewer = new Person("Reviewer", dateList());
+		DiplomaWork work = new DiplomaWork("name", "diplomants", leader, reviewer,"type");
+		ArrayList<Person> jury = new ArrayList<Person>();
+		
+		fm.addPersonToJury(jury, work);
+		
+		assertEquals(2,jury.size());
+	}
+	
+	@Test
+	public void addPersonToJuryTest2(){
+		FunctionalityManager fm = new FunctionalityManager();
+		Person leader = new Person("Leader", dateList());
+		Person reviewer = new Person("Reviewer", dateList());
+		DiplomaWork work = new DiplomaWork("name", "diplomants", leader, reviewer,"type");
+		ArrayList<Person> jury = new ArrayList<Person>();
+		
+		jury.add(leader);
+		fm.addPersonToJury(jury, work);
+		
+		assertEquals(2,jury.size());
+	}
+	
+	@Test
+	public void getPersonTest1(){
+		FunctionalityManager fm = new FunctionalityManager();
+		fm.getPerson(dateList(), "Kolio", "Diploma Leader");
+		
+		assertEquals(1,fm.getLeaders().size());
+	}
+	
+	@Test
+	public void getPersonTest2(){
+		FunctionalityManager fm = new FunctionalityManager();
+		fm.getPerson(dateList(), "Kolio", "Reviewer");
+		
+		assertEquals(1,fm.getReviewers().size());
+	}
+	
+	@Test
+	public void getPersonTest3(){
+		FunctionalityManager fm = new FunctionalityManager();
+		fm.getPerson(dateList(), "Kolio", "Both");
+		
+		assertEquals(1,fm.getLeaders().size());
+		assertEquals(1,fm.getReviewers().size());
+	}
+	
+	@Test
+	public void getDiplomaTest1(){
+		FunctionalityManager fm = new FunctionalityManager();
+		
+		fm.getPerson(dateList(), "Kolio", "Both");
+		fm.getDiploma("projectName", "diplomants", "Kolio", "Kolio", "Software", "Game/Media");
+		
+		assertEquals(1,fm.getSoftwareWorks().size());
+	}
 
+	@Test
+	public void getDiplomaTest2(){
+		FunctionalityManager fm = new FunctionalityManager();
+		
+		fm.getPerson(dateList(), "Kolio", "Both");
+		fm.getDiploma("projectName", "diplomants", "Kolio", "Kolio", "Communications", "type");
+	
+		assertEquals(1,fm.getNetWorks().size());
+	}
+	
+	@Test
+	public void getDiplomaTest3(){
+		FunctionalityManager fm = new FunctionalityManager();
+		
+		fm.getPerson(dateList(), "Kolio", "Both");
+		fm.getDiploma("projectName", "diplomants", "Kolio", "Kolio", "Hardware", "type");
+		
+		assertEquals(1,fm.getHardwareWorks().size());
+	}
+	
+	
 	public ArrayList<Date> dateList() {
 		ArrayList<Date> set = new ArrayList<Date>();
 		set.add(new Date(1, 2, 2012));

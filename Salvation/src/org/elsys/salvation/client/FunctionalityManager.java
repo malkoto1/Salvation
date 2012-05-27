@@ -4,10 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.ListBox;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 
 public class FunctionalityManager implements Serializable {
@@ -117,80 +115,70 @@ public class FunctionalityManager implements Serializable {
 		this.softDefences = softDefences;
 	}
 
-	public void getPerson(ArrayList<Date> set, TextItem box, ListBox listBox) {
-		if (listBox.getSelectedIndex() == 0) {
-			Person person = new Person(box.getValueAsString(), set);
+	public void getPerson(ArrayList<Date> set, String name, String type) {
+		if (type.equals("Diploma Leader")) {
+			Person person = new Person(name, set);
 			leaders.add(person);
-		} else if (listBox.getSelectedIndex() == 1) {
-			Person person = new Person(box.getValueAsString(), set);
+		} else if (type.equals("Reviewer")) {
+			Person person = new Person(name, set);
 			reviewers.add(person);
-		} else if (listBox.getSelectedIndex() == 2) {
-			Person person = new Person(box.getValueAsString(), set);
+		} else if (type.equals("Both")) {
+			Person person = new Person(name, set);
 			leaders.add(person);
 			reviewers.add(person);
 		}
 	}
+	
+	public boolean checkEmpty(TextItem box){
+		if(box.getValueAsString()==null){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
-	public void getDiploma(TextItem projectName, TextItem diplomants,
-			ListBox diplomaLeader, ListBox diplomaReviewer,
-			ListBox specialtiesListBox, ListBox typeListBox) {
+	public void getDiploma(String projectName, String diplomants,
+			String diplomaLeader, String diplomaReviewer,
+			String specialtie, String type) {
 
 		Person leader = new Person();
 		Person reviewer = new Person();
 
 		for (int i = 0; i < leaders.size(); i++) {
-			if (leaders
-					.get(i)
-					.getName()
-					.equals(diplomaLeader.getValue(diplomaLeader
-							.getSelectedIndex()))) {
+			if (leaders.get(i).getName().equals(diplomaLeader)) {
 				leader = leaders.get(i);
 			}
 		}
 
 		for (int k = 0; k < reviewers.size(); k++) {
-			if (reviewers
-					.get(k)
-					.getName()
-					.equals(diplomaReviewer.getValue(diplomaReviewer
-							.getSelectedIndex()))) {
-
+			if (reviewers.get(k).getName().equals(diplomaReviewer)) {
+				reviewer = reviewers.get(k);
 			}
-			reviewer = reviewers.get(k);
 		}
 
-		if (specialtiesListBox.getValue(specialtiesListBox.getSelectedIndex()).equalsIgnoreCase("Software")
-				&& !softwareWorks.contains(new DiplomaWork(projectName
-						.getValueAsString(), diplomants.getValueAsString(),
-						leader, reviewer, typeListBox.getValue(typeListBox.getSelectedIndex())))) {
-			softwareWorks.add(new DiplomaWork(projectName.getValueAsString(),
-					diplomants.getValueAsString(), leader, reviewer, typeListBox
-							.getValue(typeListBox.getSelectedIndex())));
-
-		} else if (specialtiesListBox.getValue(specialtiesListBox.getSelectedIndex()).equalsIgnoreCase("Hardware")
-				&& !hardwareWorks.contains(new DiplomaWork(projectName
-						.getValueAsString(), diplomants.getValueAsString(),
+		if (specialtie.equalsIgnoreCase("Software")
+				&& !softwareWorks.contains(new DiplomaWork(projectName, diplomants,
+						leader, reviewer, type))) {
+			softwareWorks.add(new DiplomaWork(projectName,
+					diplomants, leader, reviewer, type));
+		} else if (specialtie.equalsIgnoreCase("Hardware")
+				&& !hardwareWorks.contains(new DiplomaWork(projectName, diplomants,
 						leader, reviewer, "Hardware"))) {
-			hardwareWorks
-					.add(new DiplomaWork(projectName.getValueAsString(),
-							diplomants.getValueAsString(), leader, reviewer,
-							"Hardware"));
-
-		} else if (specialtiesListBox.getValue(specialtiesListBox.getSelectedIndex()).equalsIgnoreCase(
-				"Communication")
-				&& !netWorks.contains(new DiplomaWork(projectName
-						.getValueAsString(), diplomants.getValueAsString(),
-						leader, reviewer, "Communication"))) {
-			netWorks.add(new DiplomaWork(projectName.getValueAsString(),
-					diplomants.getValueAsString(), leader, reviewer,
-					"Communication"));
+			hardwareWorks.add(new DiplomaWork(projectName,
+					diplomants, leader, reviewer,"Hardware"));
+		} else if (specialtie.equalsIgnoreCase("Communications")
+				&& !netWorks.contains(new DiplomaWork(projectName, diplomants,
+						leader, reviewer, "Communications"))) {
+			netWorks.add(new DiplomaWork(projectName,
+					diplomants, leader, reviewer,"Communication"));
 		}
-
 	}
 
 	public void generateDefences() {
 		HashSet<Date> takenDates = new HashSet<Date>();
 		HashSet<Date> softTakenDates = new HashSet<Date>();
+
+		resetDefences();
 
 		while (hardwareWorks.size() > 0) {
 			hardDefences.add(defaultGeneration(hardwareWorks, takenDates));
@@ -202,20 +190,16 @@ public class FunctionalityManager implements Serializable {
 
 		if(softwareWorks.size()>0){
 			if(softwareWorksContains("Game/Media") == 1){
-				softDefences.add(softwareDefenceTypeGeneration("Game/Media",
-						softTakenDates));
+				softDefences.add(softwareDefenceTypeGeneration("Game/Media",softTakenDates));
 			}
 			if(softwareWorksContains("Web Site/App") == 1){
-				softDefences.add(softwareDefenceTypeGeneration("Web Site/App",
-						softTakenDates));
+				softDefences.add(softwareDefenceTypeGeneration("Web Site/App",softTakenDates));
 			}
 			if(softwareWorksContains("Plug-in/Driver") == 1){
-				softDefences.add(softwareDefenceTypeGeneration("Plug-in/Driver",
-						softTakenDates));
+				softDefences.add(softwareDefenceTypeGeneration("Plug-in/Driver",softTakenDates));
 			}
 			if(softwareWorksContains("Other") == 1){
-				softDefences
-				.add(softwareDefenceTypeGeneration("Other", softTakenDates));
+				softDefences.add(softwareDefenceTypeGeneration("Other", softTakenDates));
 			}
 			if(softwareWorks.size()>0){
 				organizeLastSoftwareWorks(softDefences, softTakenDates);
@@ -223,175 +207,127 @@ public class FunctionalityManager implements Serializable {
 		}
 	}
 
+	private void resetDefences() {
+		resetDefence(hardDefences, hardwareWorks);
+		resetDefence(softDefences, softwareWorks);
+		resetDefence(netDefences, netWorks);
+	}
+
+	private void resetDefence(ArrayList<Defence> defences, ArrayList<DiplomaWork> works) {
+		if(defences.size() > 1){
+			for(int i = 0; i < defences.size(); i++){
+				for(int k = 0; k < defences.get(i).getDiplomaWorks().size(); k++){
+					works.add(defences.get(i).getDiplomaWorks().get(k));
+				}
+			}
+			defences.clear();
+		}
+	}
+
 	public Defence defaultGeneration(ArrayList<DiplomaWork> works,
 			HashSet<Date> takenDates) {
 		Defence defence = new Defence();
-		ArrayList<Person> jury = new ArrayList<Person>();
 
-		if (works.size() <= 9) {
+		if(works.size()<=9){
 			for (int i = 0; i < works.size(); i++) {
 				defence.addDiploma(works.get(i));
 			}
 			works.clear();
-			return defence;
-		} else {
-			jury.add(works.get(0).getLeader());
-
-			for (int i = 0; i < works.size(); i++) {
-				if (works.get(i).getLeader().equals(jury.get(0))) {
-					defence.addDiploma(works.get(i));
-				}
+		}else{
+			for (int i = 0; i < 8; i++) {
+				defence.addDiploma(works.get(i));
 			}
-
-			for (int f = 0; f < works.size(); f++) {
-				int broken = 0;
-				if (!works.get(f).getLeader().equals(jury.get(0))) {
-					for (int i = 0; i < jury.get(0).getAvailableDates().size(); i++) {
-						for (int k = 0; k < works.get(f).getLeader()
-								.getAvailableDates().size(); k++) {
-							if (jury.get(0)
-									.getAvailableDates()
-									.get(i)
-									.equals(works.get(f).getLeader()
-											.getAvailableDates().get(k))
-									&& !takenDates.contains(jury.get(0)
-											.getAvailableDates().get(i))) {
-								defence.setDay(jury.get(0).getAvailableDates()
-										.get(i));
-								jury.add(works.get(f).getLeader());
-								takenDates.add(defence.getDay());
-								broken = 1;
-								break;
-							}
-						}
-						if (broken == 1) {
-							break;
-						}
-					}
-				}
-				if (broken == 1) {
-					break;
-				}
-			}
-
-			for (int i = 0; i < works.size(); i++) {
-				if (works.get(i).getLeader().equals(jury.get(1))) {
-					defence.addDiploma(works.get(i));
-				}
-			}
-
 			works.removeAll(defence.getDiplomaWorks());
-
-			if (defence.getDiplomaWorks().size() >= 7
-					&& defence.getDiplomaWorks().size() <= 9) {
-				jury.add(defence.getDiplomaWorks().get(0).getReviewer());
-				for (int i = 1; i < defence.getDiplomaWorks().size(); i++) {
-					if (!defence.getDiplomaWorks().get(i).getReviewer()
-							.equals(jury.get(2))) {
-						jury.add(defence.getDiplomaWorks().get(i).getReviewer());
-						break;
-					}
-				}
-			} else if (defence.getDiplomaWorks().size() > 9) {
-				while (defence.getDiplomaWorks().size() > 8) {
-					works.add(defence.getDiplomaWorks().get(
-							defence.getDiplomaWorks().size() - 1));
-					defence.removeDiploma();
-				}
-				jury.add(defence.getDiplomaWorks().get(0).getReviewer());
-				for (int i = 1; i < defence.getDiplomaWorks().size(); i++) {
-					if (!defence.getDiplomaWorks().get(i).getReviewer()
-							.equals(jury.get(2))) {
-						jury.add(defence.getDiplomaWorks().get(i).getReviewer());
-						break;
-					}
-				}
-			} else if (defence.getDiplomaWorks().size() < 7) {
-
-				for (int f = 0; f < works.size(); f++) {
-					int broken = 0;
-					if (!works.get(f).getLeader().equals(jury.get(1))) {
-						for (int k = 0; k < works.get(f).getLeader()
-								.getAvailableDates().size(); k++) {
-							if (defence.getDay().equals(
-									works.get(f).getLeader()
-											.getAvailableDates().get(k))) {
-								jury.add(works.get(f).getLeader());
-								broken = 1;
-								break;
-							}
-						}
-						if (broken == 1) {
-							break;
-						}
-					}
-				}
-
-				for (int i = 0; i < works.size(); i++) {
-					if (works.get(i).getLeader().equals(jury.get(2))) {
-						defence.addDiploma(works.get(i));
-					}
-				}
-				works.removeAll(defence.getDiplomaWorks());
-
-				if (defence.getDiplomaWorks().size() > 7) {
-					while (defence.getDiplomaWorks().size() > 8) {
-						works.add(defence.getDiplomaWorks().get(
-								defence.getDiplomaWorks().size() - 1));
-						defence.removeDiploma();
-					}
-					jury.add(defence.getDiplomaWorks().get(0).getReviewer());
-				} else if (defence.getDiplomaWorks().size() < 7) {
-					for (int f = 0; f < works.size(); f++) {
-						int broken = 0;
-						if (!works.get(f).getLeader().equals(jury.get(2))) {
-							for (int k = 0; k < works.get(f).getLeader()
-									.getAvailableDates().size(); k++) {
-								if (defence.getDay().equals(
-										works.get(f).getLeader()
-												.getAvailableDates().get(k))) {
-									jury.add(works.get(f).getLeader());
-									broken = 1;
-									break;
-								}
-							}
-							if (broken == 1) {
-								break;
-							}
-						}
-					}
-
-					for (int i = 0; i < works.size(); i++) {
-						if (works.get(i).getLeader().equals(jury.get(3))) {
-							defence.addDiploma(works.get(i));
-						}
-					}
-					works.removeAll(defence.getDiplomaWorks());
-					if (defence.getDiplomaWorks().size() < 8) {
-						while (defence.getDiplomaWorks().size() < 8) {
-							defence.addDiploma(works.get(works.size() - 1));
-							works.remove(works.get(works.size() - 1));
-						}
-					} else if (defence.getDiplomaWorks().size() > 8) {
-						while (defence.getDiplomaWorks().size() > 8) {
-							works.add(defence.getDiplomaWorks().get(
-									defence.getDiplomaWorks().size() - 1));
-							defence.removeDiploma();
-						}
-					}
-				}
-			}
-		}
-
-		works.removeAll(defence.getDiplomaWorks());
-
+		} 
+		
+		generateJury(defence,works);
+		setDefenceDate(defence,takenDates);
+		
 		return defence;
 	}
 
-	public Defence softwareDefenceTypeGeneration(String type,
-			HashSet<Date> takenDates) {
-		Defence defence = new Defence();
+	private void setDefenceDate(Defence defence, HashSet<Date> takenDates) {
+		Person busyMan = new Person();
+
+		for (int i = 1; i < defence.getJury().size(); i++) {
+			if (defence.getJury().get(i).getAvailableDates().size() > 0){
+				busyMan = defence.getJury().get(i);
+				break;
+			}
+		}
+		
+		for(int i = 0; i<defence.getJury().size(); i++){
+			if(defence.getJury().get(i).getAvailableDates().size()<
+					busyMan.getAvailableDates().size()){
+				busyMan = defence.getJury().get(i);
+			}
+		}
+				
+		findDate(defence,busyMan,takenDates);
+	}
+
+	private void findDate(Defence defence, Person busyMan, HashSet<Date> takenDates) {
+		int setDate = 0;
+		
+		for(int i = 0; i<defence.getJury().size(); i++){
+			for(int k = 0; k<busyMan.getAvailableDates().size(); k++){
+				for(int f = 0; f < defence.getJury().get(i).getAvailableDates().size(); f++){
+					if(busyMan.getAvailableDates().get(k).equals(defence.getJury().get(i).getAvailableDates().get(f))
+							&& !takenDates.contains(busyMan.getAvailableDates().get(k))){
+						defence.setDay(busyMan.getAvailableDates().get(k));
+						takenDates.add(busyMan.getAvailableDates().get(k));
+						setDate=1;
+						break;
+					}
+				}
+				if(setDate==1){break;}
+			}
+			if(setDate==1){break;}
+		}
+		
+		if(setDate==0){
+			for(int i = 0; i<defence.getJury().size(); i++){
+				for(int k = 0; k<defence.getJury().get(i).getAvailableDates().size(); k++){
+					if(!takenDates.contains(defence.getJury().get(i).getAvailableDates().get(k))){
+						defence.setDay(defence.getJury().get(i).getAvailableDates().get(k));
+						setDate=1;
+						break;
+					}
+					
+				}
+				if(setDate==1){break;}
+			}
+		}
+	}
+
+	private void generateJury(Defence defence, ArrayList<DiplomaWork> works) {
 		ArrayList<Person> jury = new ArrayList<Person>();
+		
+		for (int i = 0; i < defence.getDiplomaWorks().size(); i++) {
+			addPersonToJury(jury,defence.getDiplomaWorks().get(i));
+		}
+		
+		if(jury.size()<4){
+			int k=0;
+			while(jury.size()<4 && k < works.size()){
+				addPersonToJury(jury,works.get(k));
+				k++;
+			}
+		}
+		defence.setJury(jury);
+	}
+
+	public void addPersonToJury(ArrayList<Person> jury, DiplomaWork diplomaWork) {
+		if (!jury.contains(diplomaWork.getLeader()) && jury.size()<4) {
+			jury.add(diplomaWork.getLeader());
+		}
+		if (!jury.contains(diplomaWork.getReviewer()) && jury.size()<4) {
+				jury.add(diplomaWork.getReviewer());
+		}
+	}
+
+	public Defence softwareDefenceTypeGeneration(String type, HashSet<Date> takenDates) {
+		Defence defence = new Defence();
 
 		if (type.equals("All")) {
 			for (int i = 0; i < softwareWorks.size() && defence.getDiplomaWorks().size()<9; i++) {
@@ -400,7 +336,7 @@ public class FunctionalityManager implements Serializable {
 		} else {
 			int size = 0;
 			for (int i = 0; i < softwareWorks.size(); i++) {
-				if (softwareWorks.get(i).getType().equals(type)) {
+				if (softwareWorks.get(i).getType()==type) {
 					defence.addDiploma(softwareWorks.get(i));
 					size++;
 					if (size == 8) {
@@ -412,57 +348,8 @@ public class FunctionalityManager implements Serializable {
 
 		softwareWorks.removeAll(defence.getDiplomaWorks());
 
-		for (int i = 0; i < defence.getDiplomaWorks().size(); i++) {
-			if (!jury.contains(defence.getDiplomaWorks().get(i).getLeader())) {
-				jury.add(defence.getDiplomaWorks().get(i).getLeader());
-			}
-		}
-
-		for (int i = 0; i < defence.getDiplomaWorks().size(); i++) {
-			if (!jury.contains(defence.getDiplomaWorks().get(i).getReviewer())) {
-				jury.add(defence.getDiplomaWorks().get(i).getReviewer());
-			}
-		}
-
-		if (jury.size() > 4) {
-			while (jury.size() > 4) {
-				jury.remove(jury.size() - 1);
-			}
-		}
-
-		Person busyMan = new Person();
-		busyMan = jury.get(0);
-
-		for (int i = 1; i < jury.size(); i++) {
-			if (jury.get(i).getAvailableDates().size() < busyMan
-					.getAvailableDates().size()) {
-				busyMan = jury.get(i);
-			}
-		}
-
-		int setDate = 0;
-
-		for (int i = 0; i < busyMan.getAvailableDates().size(); i++) {
-			if (!takenDates.contains(busyMan.getAvailableDates().get(i))) {
-				defence.setDay(busyMan.getAvailableDates().get(i));
-				setDate = 1;
-				break;
-			}
-		}
-
-		if (setDate == 1 && jury.size() > 1) {
-			for (int i = 0; i < jury.get(1).getAvailableDates().size(); i++) {
-				if (!takenDates
-						.contains(jury.get(1).getAvailableDates().get(i))) {
-					defence.setDay(jury.get(1).getAvailableDates().get(i));
-					break;
-				}
-			}
-		} else {
-			defence.setDay(startDate);
-		}
-
-		defence.setJury(jury);
+		generateJury(defence,softwareWorks);
+		setDefenceDate(defence,takenDates);		
 
 		return defence;
 	}
@@ -500,5 +387,4 @@ public class FunctionalityManager implements Serializable {
 		hardwareWorks.clear();
 		netWorks.clear();
 	}
-
 }
