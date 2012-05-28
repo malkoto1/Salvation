@@ -39,6 +39,7 @@ public class Salvation implements EntryPoint {
 
 		final Button newData = new Button("New");
 		newData.addStyleName("newDataButton");
+		newData.setWidth(100);
 		// final Button existingData = new Button("Existing");
 		final HorizontalPanel mainHorizontalPanel = new HorizontalPanel();
 		final Label lastUpdatedLabel = new Label();
@@ -78,7 +79,7 @@ public class Salvation implements EntryPoint {
 		dateRangeItem.setValue(dateRange);
 
 		final Button nextButton = new Button("Next");
-
+		nextButton.setWidth(100);
 		nextButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				// FM.setStartDate(new Date(dateRange.getStartDate().getDate(),
@@ -91,6 +92,7 @@ public class Salvation implements EntryPoint {
 		});
 
 		Button backButton = new Button("Back");
+		backButton.setWidth(100);
 		backButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
@@ -125,16 +127,20 @@ public class Salvation implements EntryPoint {
 		DynamicForm textBoxForm = new DynamicForm();
 
 		final TextItem textBox = new TextItem();
+		textBox.setWidth(70);
 		textBox.setTitle("Name");
 
 		textBoxForm.setFields(textBox);
+		textBoxForm.setWidth(100);
 
 		final ListBox listBox = new ListBox();
+		listBox.setPixelSize(100, 25);
 		listBox.addItem("Diploma Leader");
 		listBox.addItem("Reviewer");
 		listBox.addItem("Both");
 
 		final DatePicker datePicker = new DatePicker();
+		datePicker.setPixelSize(160, 160);
 		datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@SuppressWarnings("deprecation")
 			public void onValueChange(ValueChangeEvent<Date> event) {
@@ -150,6 +156,7 @@ public class Salvation implements EntryPoint {
 		});
 		
 		Button oneMoreButton = new Button("One More");
+		oneMoreButton.setWidth(160);
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (FM.checkEmpty(textBox)) {
@@ -163,6 +170,7 @@ public class Salvation implements EntryPoint {
 		});
 		
 		Button next = new Button("Next");
+		next.setWidth(100);
 		next.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (FM.checkEmpty(textBox)) {
@@ -176,6 +184,7 @@ public class Salvation implements EntryPoint {
 		});
 		
 		Button back = new Button("Back");
+		back.setWidth(100);
 		back.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
@@ -218,17 +227,23 @@ public class Salvation implements EntryPoint {
 
 		final TextItem projectNameTextBox = new TextItem();
 		projectNameTextBox.setTitle("Project name");
+		projectNameTextBox.setWidth(250);
 		final TextItem diplomantsNameTextBox = new TextItem();
 		diplomantsNameTextBox.setTitle("Diplomants name/s");
+		diplomantsNameTextBox.setWidth(250);
 
 		DynamicForm projectNameForm = new DynamicForm();
 		projectNameForm.setFields(projectNameTextBox);
+		projectNameForm.setWidth(300);
 		DynamicForm diplomantsNameForm = new DynamicForm();
 		diplomantsNameForm.setFields(diplomantsNameTextBox);
+		diplomantsNameForm.setWidth(300);
 
 		final ListBox diplomaLeadersListBox = new ListBox();
+		diplomaLeadersListBox.setPixelSize(150, 30);
 		final ListBox reviewersListBox = new ListBox();
-
+		reviewersListBox.setPixelSize(150, 30);
+		
 		Iterator<Person> i = FM.getLeaders().iterator();
 		while (i.hasNext()) {
 			diplomaLeadersListBox.addItem(i.next().getName());
@@ -246,6 +261,7 @@ public class Salvation implements EntryPoint {
 		specialtiesListBox.addItem("Hardware");
 		specialtiesListBox.addItem("Software");
 		specialtiesListBox.addItem("Communications");
+		specialtiesListBox.setPixelSize(150, 30);
 
 		final ListBox typeListBox = new ListBox();
 		typeListBox.setTitle("Software Type");
@@ -254,6 +270,7 @@ public class Salvation implements EntryPoint {
 		typeListBox.addItem("Web Site/App");
 		typeListBox.addItem("Other");
 		typeListBox.setEnabled(false);
+		typeListBox.setPixelSize(150, 30);
 
 		specialtiesListBox.addChangeHandler(new ChangeHandler() {
 			@Override
@@ -269,6 +286,7 @@ public class Salvation implements EntryPoint {
 		});
 
 		Button submitButton = new Button("Submit");
+		submitButton.setWidth(100);
 		submitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (FM.checkEmpty(projectNameTextBox)
@@ -290,6 +308,7 @@ public class Salvation implements EntryPoint {
 		});
 
 		Button oneMoreButton = new Button("One More");
+		oneMoreButton.setWidth(100);
 		oneMoreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (FM.checkEmpty(projectNameTextBox)
@@ -310,6 +329,7 @@ public class Salvation implements EntryPoint {
 		});
 
 		Button back = new Button("Back");
+		back.setWidth(100);
 		back.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
@@ -453,6 +473,7 @@ public class Salvation implements EntryPoint {
 		HorizontalPanel buttonsPanel = new HorizontalPanel();
 		
 		Button backToAddDiploma = new Button("Add More");
+		backToAddDiploma.setWidth(325);
 		backToAddDiploma.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();
@@ -461,6 +482,7 @@ public class Salvation implements EntryPoint {
 		});
 		
 		Button back = new Button("Back");
+		back.setWidth(325);
 		back.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("mainDiv").clear();

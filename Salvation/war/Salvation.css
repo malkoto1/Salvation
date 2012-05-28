@@ -33,8 +33,9 @@ h1 {
   margin: 15px 6px 6px;
 }
 
-#mainDiv {
-	float: center;
-	margin-left: 35%;
+.img {
+	float : right;
+	width: 350;
+	height: 280;
 }
 
