@@ -448,27 +448,7 @@ public class Salvation implements EntryPoint {
 		// defenceSvc.getHardDefences(funcM, callback1);
 		// defenceSvc.getNetDefences(funcM, callback2);
 		// defenceSvc.getSoftDefences(funcM, callback3);
-		final ListGrid DiplomaGrid = new ListGrid();
-		DiplomaGrid.setWidth(650);
-		DiplomaGrid.setHeight(224);
-		DiplomaGrid.setShowAllRecords(true);
-		// DiplomaGrid.setCanEdit(true);
-		DiplomaGrid.setEditEvent(ListGridEditEvent.CLICK);
-		DiplomaGrid.setModalEditing(true);
-
-		DiplomaData dd = new DiplomaData(FM, specialtie);
-
-		ListGridField nameField = new ListGridField("name", "Project Name");
-		ListGridField diplomantsField = new ListGridField("diplomants",
-				"Diplomants");
-		ListGridField leaderField = new ListGridField("leader", "Leader");
-		ListGridField reviewerField = new ListGridField("reviewer", "Reviewer");
-		ListGridField typeField = new ListGridField("type", "Type");
-		typeField.setWidth(130);
-		ListGridField dateField = new ListGridField("date", "Date");
-		DiplomaGrid.setFields(new ListGridField[] { nameField, diplomantsField,
-				leaderField, reviewerField, typeField, dateField });
-		DiplomaGrid.setData(dd.getRecords());
+		
 		
 		HorizontalPanel buttonsPanel = new HorizontalPanel();
 		
@@ -493,7 +473,53 @@ public class Salvation implements EntryPoint {
 		buttonsPanel.add(back);
 		buttonsPanel.add(backToAddDiploma);
 		
-		RootPanel.get("mainDiv").add(DiplomaGrid);
+		RootPanel.get("mainDiv").add(diplomaListGrid(specialtie));
+		RootPanel.get("mainDiv").add(personListGrid(specialtie));
 		RootPanel.get("mainDiv").add(buttonsPanel);
+	}
+
+	private ListGrid personListGrid(String specialtie) {
+		final ListGrid personGrid = new ListGrid();
+		personGrid.setWidth(650);
+		personGrid.setHeight(224);
+		personGrid.setShowAllRecords(true);
+//		diplomaGrid.setCanEdit(true);
+//		diplomaGrid.setEditEvent(ListGridEditEvent.CLICK);
+//		diplomaGrid.setModalEditing(true);
+
+		PersonData pd = new PersonData(FM, specialtie);
+
+		ListGridField nameField = new ListGridField("name", "Project Name");
+		ListGridField dateField = new ListGridField("date", "Date");
+		personGrid.setFields(new ListGridField[] { nameField, dateField });
+		personGrid.setData(pd.getDiplomaRecords());
+		
+		return personGrid;
+	}
+
+	private ListGrid diplomaListGrid(String specialtie) {
+		final ListGrid diplomaGrid = new ListGrid();
+		diplomaGrid.setWidth(650);
+		diplomaGrid.setHeight(224);
+		diplomaGrid.setShowAllRecords(true);
+//		diplomaGrid.setCanEdit(true);
+//		diplomaGrid.setEditEvent(ListGridEditEvent.CLICK);
+//		diplomaGrid.setModalEditing(true);
+
+		DiplomaData dd = new DiplomaData(FM, specialtie);
+
+		ListGridField nameField = new ListGridField("name", "Project Name");
+		ListGridField diplomantsField = new ListGridField("diplomants",
+				"Diplomants");
+		ListGridField leaderField = new ListGridField("leader", "Leader");
+		ListGridField reviewerField = new ListGridField("reviewer", "Reviewer");
+		ListGridField typeField = new ListGridField("type", "Type");
+		typeField.setWidth(130);
+		ListGridField dateField = new ListGridField("date", "Date");
+		diplomaGrid.setFields(new ListGridField[] { nameField, diplomantsField,
+				leaderField, reviewerField, typeField, dateField });
+		diplomaGrid.setData(dd.getDiplomaRecords());
+		
+		return diplomaGrid;
 	}
 }

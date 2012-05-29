@@ -2,8 +2,6 @@ package org.elsys.salvation.client;
   
 import com.smartgwt.client.widgets.grid.ListGridRecord;  
   
-import java.util.Date;  
-  
 public class DiplomaRecord extends ListGridRecord {  
   
     public DiplomaRecord() {  

@@ -250,7 +250,7 @@ public class FunctionalityTesting {
 	}
 	
 	@Test
-	public void setHardDefencesTest(){
+	public void setDefencesTest(){
 		FunctionalityManager fm = new FunctionalityManager();
 		
 		ArrayList<Defence> defences = new ArrayList<Defence>();
@@ -266,17 +266,6 @@ public class FunctionalityTesting {
 		assertEquals(defences,fm.getHardDefences());
 		assertEquals(defences,fm.getNetDefences());
 		assertEquals(defences,fm.getSoftDefences());
-	}
-	
-	@Test
-	public void setSoftDefencesTest(){
-		FunctionalityManager fm = new FunctionalityManager();
-	}
-	
-	@Test
-	public void setNetDefencesTest(){
-		FunctionalityManager fm = new FunctionalityManager();
-		
 	}
 
 	@Test

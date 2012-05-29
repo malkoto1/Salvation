@@ -1,40 +1,37 @@
 package org.elsys.salvation.client;
 
-import java.util.ArrayList;
-import java.util.Date;  
+import java.util.ArrayList; 
 
 public class DiplomaData {  
   
-    private DiplomaRecord[] records; 
-    private FunctionalityManager FM;
+    private DiplomaRecord[] diplomaRecords;
+    private FunctionalityManager fm;
     private String specialtie;
     private int size;
     private int count;
     
     public DiplomaData(FunctionalityManager fm, String specialtie){
-    	this.FM = fm;
+    	this.fm = fm;
     	this.specialtie = specialtie;
     }
   
-    public DiplomaRecord[] getRecords() {  
-        if (records == null) {  
-            records = getNewRecords();  
+    public DiplomaRecord[] getDiplomaRecords() {  
+        if (diplomaRecords == null) {  
+            diplomaRecords = getNewRecords();  
         }  
-        return records;  
+        return diplomaRecords;  
     }  
   
     public DiplomaRecord[] getNewRecords() {
     	size=0;
     	count=0;
     	
-    	count(FM.getHardDefences());
-    	count(FM.getNetDefences());
-    	count(FM.getSoftDefences());
+    	count(fm.getHardDefences());
+    	count(fm.getNetDefences());
+    	count(fm.getSoftDefences());
     	
-    	records = new DiplomaRecord[size];
-        
-        
-        
+    	diplomaRecords = new DiplomaRecord[size];
+                
         if(specialtie.equals("Hardware")){
         	getHardDefences();
         }else if(specialtie.equals("Software")){
@@ -47,7 +44,7 @@ public class DiplomaData {
         	getNetDefences();
         }
            	
-    	return records;  
+    	return diplomaRecords;  
     }
     
     public void count(ArrayList<Defence> defences){
@@ -59,45 +56,45 @@ public class DiplomaData {
     }
     
     public void getHardDefences(){
-    	 for(int i=0; i<FM.getHardDefences().size(); i++){
-         	for(int k = 0; k<FM.getHardDefences().get(i).getDiplomaWorks().size(); k++){
-         		DiplomaRecord record = new DiplomaRecord(FM.getHardDefences().get(i).getDiplomaWorks().get(k).getName(),
-         				FM.getHardDefences().get(i).getDiplomaWorks().get(k).getDiplomants(),
-         				FM.getHardDefences().get(i).getDiplomaWorks().get(k).getReviewer().getName(),
-         				FM.getHardDefences().get(i).getDiplomaWorks().get(k).getLeader().getName(),
+    	 for(int i=0; i<fm.getHardDefences().size(); i++){
+         	for(int k = 0; k<fm.getHardDefences().get(i).getDiplomaWorks().size(); k++){
+         		DiplomaRecord record = new DiplomaRecord(fm.getHardDefences().get(i).getDiplomaWorks().get(k).getName(),
+         				fm.getHardDefences().get(i).getDiplomaWorks().get(k).getDiplomants(),
+         				fm.getHardDefences().get(i).getDiplomaWorks().get(k).getReviewer().getName(),
+         				fm.getHardDefences().get(i).getDiplomaWorks().get(k).getLeader().getName(),
          				"Hardware",
-         				FM.getHardDefences().get(i).getDay().toString());
-         		records[count] = record;
+         				fm.getHardDefences().get(i).getDay().toString());
+         		diplomaRecords[count] = record;
          		count++;
          	}
          }
     }
     
     public void getSoftDefences(){
-    	for(int i=0; i<FM.getSoftDefences().size(); i++){
-        	for(int k = 0; k<FM.getSoftDefences().get(i).getDiplomaWorks().size(); k++){
-        		DiplomaRecord record = new DiplomaRecord(FM.getSoftDefences().get(i).getDiplomaWorks().get(k).getName(),
-        				FM.getSoftDefences().get(i).getDiplomaWorks().get(k).getDiplomants(),
-        				FM.getSoftDefences().get(i).getDiplomaWorks().get(k).getReviewer().getName(),
-        				FM.getSoftDefences().get(i).getDiplomaWorks().get(k).getLeader().getName(),
-        				"Software: " + FM.getSoftDefences().get(i).getDiplomaWorks().get(k).getType(),
-        				FM.getSoftDefences().get(i).getDay().toString());
-        		records[count] = record;
+    	for(int i=0; i<fm.getSoftDefences().size(); i++){
+        	for(int k = 0; k<fm.getSoftDefences().get(i).getDiplomaWorks().size(); k++){
+        		DiplomaRecord record = new DiplomaRecord(fm.getSoftDefences().get(i).getDiplomaWorks().get(k).getName(),
+        				fm.getSoftDefences().get(i).getDiplomaWorks().get(k).getDiplomants(),
+        				fm.getSoftDefences().get(i).getDiplomaWorks().get(k).getReviewer().getName(),
+        				fm.getSoftDefences().get(i).getDiplomaWorks().get(k).getLeader().getName(),
+        				"Software: " + fm.getSoftDefences().get(i).getDiplomaWorks().get(k).getType(),
+        				fm.getSoftDefences().get(i).getDay().toString());
+        		diplomaRecords[count] = record;
         		count++;
         	}
         }
     }
     
     public void getNetDefences(){
-    	 for(int i=0; i<FM.getNetDefences().size(); i++){
-         	for(int k = 0; k<FM.getNetDefences().get(i).getDiplomaWorks().size(); k++){
-         		DiplomaRecord record = new DiplomaRecord(FM.getNetDefences().get(i).getDiplomaWorks().get(k).getName(),
-         				FM.getNetDefences().get(i).getDiplomaWorks().get(k).getDiplomants(),
-         				FM.getNetDefences().get(i).getDiplomaWorks().get(k).getReviewer().getName(),
-         				FM.getNetDefences().get(i).getDiplomaWorks().get(k).getLeader().getName(),
+    	 for(int i=0; i<fm.getNetDefences().size(); i++){
+         	for(int k = 0; k<fm.getNetDefences().get(i).getDiplomaWorks().size(); k++){
+         		DiplomaRecord record = new DiplomaRecord(fm.getNetDefences().get(i).getDiplomaWorks().get(k).getName(),
+         				fm.getNetDefences().get(i).getDiplomaWorks().get(k).getDiplomants(),
+         				fm.getNetDefences().get(i).getDiplomaWorks().get(k).getReviewer().getName(),
+         				fm.getNetDefences().get(i).getDiplomaWorks().get(k).getLeader().getName(),
          				"Communications",
-         				FM.getNetDefences().get(i).getDay().toString());
-         		records[count] = record;
+         				fm.getNetDefences().get(i).getDay().toString());
+         		diplomaRecords[count] = record;
          		count++;
          	}
          }

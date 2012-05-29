@@ -1,7 +1,5 @@
 package org.elsys.salvation.server;
 
-import java.util.ArrayList;
-
 import org.elsys.salvation.client.DefenceService;
 import org.elsys.salvation.client.FunctionalityManager;
 
